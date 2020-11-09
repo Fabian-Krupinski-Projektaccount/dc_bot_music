@@ -36,7 +36,6 @@ module.exports = {
             channel.join();
         }
         console.log(message.member.voice.channelID);
-        const channel = client.channels.cache.get(message.member.voice.channelID);
         channel.join();
         client.guild_list[message.guild.id].voiceChannel = channel;
         if (client.guild_list[message.guild.id].voiceChannel != null && message.member.voice.channelID == client.guild_list[message.guild.id].voiceChannel.id) {
