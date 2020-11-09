@@ -22,6 +22,7 @@ client.commands = new Discord.Collection();
 client.prefix = conf.prefix;
 client.name = conf.name;
 
+client.guild_list = {};
 
 
 /**
@@ -69,13 +70,25 @@ client.on('message', async msg => {
 
 	if (!command) return;
 
+    if (!client.guild_list[msg.guild.id]) {
+        client.guild_list[msg.guild.id] = {
+            music: {
+                queue: new Map(),
+                isPlaying: false,
+                dispatcher: null,
+                voiceChannel: null,
+                volume: 5
+            }
+        };
+    }
+
 
 
 
 
 
 	try {
-		command.execute(msg, args, client.name);
+		command.execute(msg, args, client);
 	} catch (error) {
 		console.error(error);
 		msg.reply("There was an error executing that command.").catch(console.error);
