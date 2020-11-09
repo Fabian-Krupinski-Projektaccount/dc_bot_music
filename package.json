@@ -9,8 +9,13 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@discordjs/opus": "^0.3.3",
     "discord.js": "^12.4.1",
     "dotenv": "^8.2.0",
-    "fs-extra": "^9.0.1"
+    "ffmpeg": "0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs-extra": "^9.0.1",
+    "soundcloud-downloader": "^0.1.8",
+    "ytdl-core": "^4.0.3"
   }
 }
