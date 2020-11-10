@@ -9,6 +9,8 @@ module.exports = {
 
 		if(!text_channel) return false;
 
+		if (message.client.user.hasPermission('ADMINISTRATOR')) return true;
+
 		var permissions = text_channel.permissionsFor(message.client.user);
 
 		if (!permissions.has("VIEW_CHANNEL") || !permissions.has("SEND_MESSAGES")) return false;
