@@ -2,6 +2,7 @@
 require('dotenv').config()
 const fs = require('fs-extra');
 const path = require('path');
+const setTitle = require('console-title');
 
 
 
@@ -13,6 +14,7 @@ var conf = {
     "prefix": "m!",
     "name": "Music Bot"
 }
+setTitle(`${conf.name} [${conf.prefix}]`);
 
 
 
