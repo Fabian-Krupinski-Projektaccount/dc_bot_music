@@ -102,17 +102,34 @@ client_list.forEach(client => {
 
 
 
-
-
-
-    	try {
-    		command.execute(msg, args, client);
-    	} catch (error) {
-    		console.error(error);
-    		msg.reply("There was an error executing that command.").catch(console.error);
-    	}
+        if (getClientToRunCommand(msg, args, command) == client) {
+        	try {
+                console.log(msg);
+        		command.execute(msg, args, client);
+        	} catch (error) {
+        		console.error(error);
+        		msg.reply("There was an error executing that command.").catch(console.error);
+        	}
+        }
     });
 });
+
+
+var LAST_MESSAGE_WITH_COMMAND;
+function getClientToRunCommand(message, args, command) {
+    if (message == LAST_MESSAGE_WITH_COMMAND) return;
+
+    for (var i = 0; i < client_list.length; i++) {
+        let client = client_list[i];
+
+        if (command.isExecutable(message, args, client) == true) {
+            return client;
+        }
+    }
+
+
+    LAST_MESSAGE_WITH_COMMAND = message;
+}
 
 //https://www.voidcanvas.com/make-console-log-output-colorful-and-stylish-in-browser-node/
 //https://github.com/eritislami/evobot/blob/f9c0cf69a636476f0c3c60f799842c029ee7e34d/index.js#L25

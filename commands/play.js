@@ -6,21 +6,30 @@ module.exports = {
 	name: "play",
 	aliases: ["p"],
 	description: "Starts playing or enqueues a song",
-	execute(message, args, client) {
-        var channel = message.member.voice.channel;
+	isExecutable(message, args, client) {
+		let text_channel = message.channel;
+		let voice_channel = message.member.voice.channel;
 
-        if (!channel) {
-            return message.reply(" you need to be in a voice channel!");
-        }
+		if(!text_channel) return false;
+		if(!voice_channel) return false;
+
+		var permissions = text_channel.permissionsFor(message.client.user);
+
+		if (!permissions.has("VIEW_CHANNEL") || !permissions.has("SEND_MESSAGES")) return false;
+
+		permissions = voice_channel.permissionsFor(message.client.user);
+
+		if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return false;
+
+		return true;
+	},
+	execute(message, args, client) {
+		if(!this.isExecutable(message, args, client)) return;
+
+        var channel = message.member.voice.channel;
 
         if ((client.guild_list[message.guild.id].voiceChannel != null) && (client.guild_list[message.guild.id].voiceChannel != channel)) {
             return message.reply(" I'm already in a voice channel!");
-        }
-
-        var permissions = voiceChannel.permissionsFor(message.client.user);
-
-        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
-            return message.reply(", I need the permissions to join and speak in your voice channel!");
         }
 
 
