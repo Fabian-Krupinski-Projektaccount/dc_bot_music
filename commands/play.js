@@ -6,7 +6,7 @@ module.exports = {
 	name: "play",
 	aliases: ["p"],
 	description: "Starts playing or enqueues a song",
-	isExecutable(message, args, client) {
+	getHeuristikForRunningCommand(message, args, client) {
 		let text_channel = message.channel;
 		let voice_channel = message.member.voice.channel;
 
@@ -25,8 +25,6 @@ module.exports = {
 		return true;
 	},
 	async execute(message, args, client) {
-		if(!this.isExecutable(message, args, client)) return;
-
         var channel = message.member.voice.channel;
 
         if ((client.guild_list[message.guild.id].voiceChannel != null) && (client.guild_list[message.guild.id].voiceChannel != channel)) {

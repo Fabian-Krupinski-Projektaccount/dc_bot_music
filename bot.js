@@ -106,8 +106,7 @@ client_list.forEach(client => {
         }
 
 
-
-        if (getClientToRunCommand(msg, args, command) == client) {
+        if (client == await getBestClientToRunCommand(msg, args, command)) {
         	try {
         		command.execute(msg, args, client);
         	} catch (error) {
@@ -119,21 +118,21 @@ client_list.forEach(client => {
 });
 
 
-var LAST_MESSAGE_WITH_COMMAND;
-function getClientToRunCommand(message, args, command) {
-    if (message == LAST_MESSAGE_WITH_COMMAND) return;
+async function getBestClientToRunCommand(message, args, command) {
+    var heuristik = [];
+    var highestHeuristikClient;
 
-    for (var i = 0; i < client_list.length; i++) {
-        let client = client_list[i];
+    for (const client of client_list) {
+        let id = heuristik.length;
 
-        if (command.isExecutable(message, args, client) == true) {
-            LAST_MESSAGE_WITH_COMMAND = message;
-            return client;
+        heuristik[id] = await command.getHeuristikForRunningCommand(message, args, client);
+
+        if (heuristik[id-1] < heuristik[id] || !heuristik[id-1]) {
+            highestHeuristikClient = client;
         }
     }
 
-
-    LAST_MESSAGE_WITH_COMMAND = message;
+    return highestHeuristikClient;
 }
 
 //https://www.voidcanvas.com/make-console-log-output-colorful-and-stylish-in-browser-node/

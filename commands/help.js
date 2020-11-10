@@ -4,22 +4,31 @@ module.exports = {
 	name: "help",
 	aliases: ["h"],
 	description: "Display all commands and descriptions",
-	isExecutable(message, args, client) {
-		let text_channel = message.channel;
+	getHeuristikForRunningCommand(message, args, client) {
+		var heuristik = 0;
 
-		if(!text_channel) return false;
 
-		//if (message.client.user.hasPermission('ADMINISTRATOR')) return true;
+		var text_channel = message.channel;
 
-		var permissions = text_channel.permissionsFor(message.client.user);
+		if(!text_channel) return -1;
 
-		if (!permissions.has("VIEW_CHANNEL") || !permissions.has("SEND_MESSAGES")) return false;
+		var text_permissions = text_channel.permissionsFor(message.client.user);
 
-		return true;
+		if (!text_permissions.has("VIEW_CHANNEL") && !text_permissions.has("SEND_MESSAGES") && !message.guild.me.hasPermission("ADMINISTRATOR")) {
+			return -1
+		}
+
+		if (text_permissions.has("VIEW_CHANNEL") && text_permissions.has("SEND_MESSAGES") && !message.guild.me.hasPermission("ADMINISTRATOR")) {
+			heuristik += 2;
+		}
+
+		if (message.guild.me.hasPermission("ADMINISTRATOR")) {
+			heuristik += 1;
+		}
+
+		return heuristik;
 	},
 	execute(message, args, client) {
-		if(!this.isExecutable(message, args, client)) return;
-
 		let commands = message.client.commands.array();
 
 		let helpEmbed = new Discord.MessageEmbed()

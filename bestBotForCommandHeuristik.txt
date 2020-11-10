@@ -1,0 +1,11 @@
+Discord bot heuristic
+
+=-1 Permission missing
+=-1 No access to channels
++1 Administrator
++2 Has all permissions needed and not Administrator
+
+
+---MUSIC---
+=-1 already in another voice channel and playing or paused
++100000 already in voice channel
