@@ -123,6 +123,7 @@ function getClientToRunCommand(message, args, command) {
         let client = client_list[i];
 
         if (command.isExecutable(message, args, client) == true) {
+            LAST_MESSAGE_WITH_COMMAND = message;
             return client;
         }
     }

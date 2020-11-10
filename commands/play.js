@@ -23,7 +23,7 @@ module.exports = {
 
 		return true;
 	},
-	execute(message, args, client) {
+	async execute(message, args, client) {
 		if(!this.isExecutable(message, args, client)) return;
 
         var channel = message.member.voice.channel;
@@ -42,7 +42,10 @@ module.exports = {
         }
         if (client.guild_list[message.guild.id].voiceChannel == null) {
 
-            channel.join();
+            client.guild_list[message.guild.id].voiceChannel =  await channel.join()
+				.then(connection => {
+					connection.voice.setSelfDeaf(true);
+				});
         }
         console.log(message.member.voice.channelID);
         channel.join();
