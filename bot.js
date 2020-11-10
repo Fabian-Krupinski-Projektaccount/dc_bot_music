@@ -25,7 +25,7 @@ const bot_token_list = [
 var client_list = [];
 
 bot_token_list.forEach(token => {
-    let client_id = client_list.length;
+    let client_id = client_list.length;     //first run =0
 
     client_list[client_id] = new Discord.Client()
 
@@ -48,7 +48,7 @@ client_list.forEach(client => {
 
         client.user.setPresence({
             activity: {
-                name: 'Music', type: 'PLAYING'
+                name: `m!help on ${client.guilds.cache.size} server/s`, type: 'PLAYING'
             },
             status: 'online'
         })
