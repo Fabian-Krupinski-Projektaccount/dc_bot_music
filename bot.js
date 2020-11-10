@@ -3,6 +3,7 @@ require('dotenv').config()
 const fs = require('fs-extra');
 const path = require('path');
 const setTitle = require('console-title');
+const consola = require('consola')
 
 
 
@@ -46,7 +47,7 @@ bot_token_list.forEach(token => {
  */
 client_list.forEach(client => {
     client.on('ready', () => {
-        console.log(`Logged in as >>${client.user.tag}<<`);
+        consola.ready(`Bot >>${client.user.tag}<<`);
 
         client.user.setPresence({
             activity: {
@@ -68,7 +69,7 @@ for (const file of commandFiles) {
     client_list.forEach(client => {
 	       client.commands.set(command.name, command);
     });
-	console.log(`Command >>\x1b[4m${command.name}\x1b[0m<< \x1b[32mloaded!\x1b[0m`);
+	consola.success(`Command >>\x1b[4m${command.name}\x1b[0m<< loaded!`);
 }
 
 
@@ -106,11 +107,11 @@ client_list.forEach(client => {
 
         if (getClientToRunCommand(msg, args, command) == client) {
         	try {
-                console.log(msg);
         		command.execute(msg, args, client);
         	} catch (error) {
-        		console.error(error);
-        		msg.reply("There was an error executing that command.").catch(console.error);
+        		consola.error(new Error('Executing Command'))
+        		msg.reply("There was an error executing that command.")
+                    .catch(consola.error(new Error('Replying to Message')));
         	}
         }
     });
