@@ -110,8 +110,7 @@ client_list.forEach(client => {
         		command.execute(msg, args, client);
         	} catch (error) {
         		consola.error(new Error('Executing Command'))
-        		msg.reply("There was an error executing that command.")
-                    .catch(consola.error(new Error('Replying to Message')));
+        		msg.reply("There was an error executing that command.");
         	}
         }
     });
