@@ -4,11 +4,11 @@ module.exports = {
 	name: "help",
 	aliases: ["h"],
 	description: "Display all commands and descriptions",
-	execute(message, args, bot_name) {
+	execute(message, args, client) {
 		let commands = message.client.commands.array();
 
 		let helpEmbed = new Discord.MessageEmbed()
-			.setTitle(bot_name + " Help")
+			.setTitle(client.name + " Help")
 			.setDescription("List of all commands")
 			.setColor("#F8AA2A");
 
