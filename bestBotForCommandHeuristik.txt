@@ -9,3 +9,4 @@ Discord bot heuristic
 ---MUSIC---
 =-1 already in another voice channel and playing or paused
 +100000 already in voice channel
++100000 in no voice channel

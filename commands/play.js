@@ -17,16 +17,17 @@ module.exports = {
 
 		var text_permissions = text_channel.permissionsFor(message.client.user);
 		var voice_permissions = voice_channel.permissionsFor(message.client.user);
+		var is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
-		if (!text_permissions.has("VIEW_CHANNEL") && !text_permissions.has("SEND_MESSAGES") && !voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK") && !message.guild.me.hasPermission("ADMINISTRATOR")) {
+		if (!text_permissions.has("VIEW_CHANNEL") && !text_permissions.has("SEND_MESSAGES") && !voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK") && !is_admin) {
 			return -1
 		}
 
-		if (text_permissions.has("VIEW_CHANNEL") && text_permissions.has("SEND_MESSAGES") && voice_permissions.has("CONNECT") && voice_permissions.has("SPEAK") && !message.guild.me.hasPermission("ADMINISTRATOR")) {
+		if (text_permissions.has("VIEW_CHANNEL") && text_permissions.has("SEND_MESSAGES") && voice_permissions.has("CONNECT") && voice_permissions.has("SPEAK") && !is_admin) {
 			heuristik += 2;
 		}
 
-		if (message.guild.me.hasPermission("ADMINISTRATOR")) {
+		if (is_admin) {
 			heuristik += 1;
 		}
 
