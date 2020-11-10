@@ -49,12 +49,14 @@ client_list.forEach(client => {
     client.on('ready', () => {
         consola.ready(`Bot >>${client.user.tag}<<`);
 
-        client.user.setPresence({
-            activity: {
-                name: `m!help on ${client.guilds.cache.size} server/s`, type: 'PLAYING'
-            },
-            status: 'online'
-        })
+        setInterval(function(){
+            client.user.setPresence({
+                activity: {
+                    name: `m!help on ${client.guilds.cache.size} server/s`, type: 'PLAYING'
+                },
+                status: 'online'
+            })
+        }, 3000);
     });
 });
 
