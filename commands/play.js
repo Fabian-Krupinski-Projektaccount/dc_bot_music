@@ -10,8 +10,7 @@ module.exports = {
 		let text_channel = message.channel;
 		let voice_channel = message.member.voice.channel;
 
-		if(!text_channel) return false;
-		if(!voice_channel) return false;
+		if(!text_channel || !voice_channel) return false;
 
 		var permissions = text_channel.permissionsFor(message.client.user);
 
