@@ -7,6 +7,10 @@ module.exports = {
 	aliases: ["p"],
 	description: "Starts playing or enqueues a song",
 	getHeuristikForRunningCommand(message, args, client) {
+		if (!message.guild.voiceConnection) {
+			client.guild_list[message.guild.id].voiceChannel = null;
+		}
+
 		var heuristik = 0;
 
 
@@ -19,21 +23,27 @@ module.exports = {
 		const voice_permissions = voice_channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
-		if (!text_permissions.has("SEND_MESSAGES") && !voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK") && !is_admin) {
-			return -1
-		}
+		if (!text_permissions.has("SEND_MESSAGES") && !voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK") && !is_admin) return -1;
 
-		if (text_permissions.has("SEND_MESSAGES") && voice_permissions.has("CONNECT") && voice_permissions.has("SPEAK") && !is_admin) {
-			heuristik += 2;
-		}
+		if (text_permissions.has("SEND_MESSAGES") && voice_permissions.has("CONNECT") && voice_permissions.has("SPEAK") && !is_admin) heuristik += 2;
 
-		if (is_admin) {
-			heuristik += 1;
-		}
+		if (is_admin) heuristik += 1;
+
+
+		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel != voice_channel) return -1;
+
+		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel == voice_channel) heuristik += 100000;
+
+		if (client.guild_list[message.guild.id].voiceChannel == null) heuristik += 50000;
+
 
 		return heuristik;
 	},
 	async execute(message, args, client) {
+		if (!message.guild.voiceConnection) {
+			client.guild_list[message.guild.id].voiceChannel = null;
+		}
+
 		//channels
 		const text_channel = message.channel;
 		const voice_channel = message.member.voice.channel;
