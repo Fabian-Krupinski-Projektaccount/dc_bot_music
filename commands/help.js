@@ -8,18 +8,18 @@ module.exports = {
 		var heuristik = 0;
 
 
-		var text_channel = message.channel;
+		const text_channel = message.channel;
 
 		if(!text_channel) return -1;
 
-		var text_permissions = text_channel.permissionsFor(message.client.user);
-		var is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
+		const text_permissions = text_channel.permissionsFor(message.client.user);
+		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
-		if (!text_permissions.has("VIEW_CHANNEL") && !text_permissions.has("SEND_MESSAGES") && !is_admin) {
+		if (!text_permissions.has("SEND_MESSAGES") && !is_admin) {
 			return -1
 		}
 
-		if (text_permissions.has("VIEW_CHANNEL") && text_permissions.has("SEND_MESSAGES") && !is_admin) {
+		if (text_permissions.has("SEND_MESSAGES") && !is_admin) {
 			heuristik += 2;
 		}
 
@@ -30,9 +30,21 @@ module.exports = {
 		return heuristik;
 	},
 	execute(message, args, client) {
-		let commands = message.client.commands.array();
+		//channels
+		const text_channel = message.channel;
 
-		let helpEmbed = new Discord.MessageEmbed()
+		//permissions
+		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
+
+		if (!text_permissions.has("SEND_MESSAGES") && !is_admin) {
+			return message.author.send("I don't have permission to send messages in this channel");
+		}
+
+
+		//execute
+		var commands = message.client.commands.array();
+
+		var helpEmbed = new Discord.MessageEmbed()
 			.setTitle(client.name + " Help")
 			.setDescription("List of all commands")
 			.setColor("#F8AA2A");
@@ -47,6 +59,6 @@ module.exports = {
 
 		helpEmbed.setTimestamp();
 
-		return message.channel.send(helpEmbed).catch(console.error);
+		return text_channel.send(helpEmbed).catch(console.error);
 	}
 };

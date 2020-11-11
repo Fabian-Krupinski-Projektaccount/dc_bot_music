@@ -10,14 +10,14 @@ module.exports = {
 		var heuristik = 0;
 
 
-		var text_channel = message.channel;
-		let voice_channel = message.member.voice.channel;
+		const text_channel = message.channel;
+		const voice_channel = message.member.voice.channel;
 
 		if(!text_channel || !voice_channel) return -1;
 
-		var text_permissions = text_channel.permissionsFor(message.client.user);
-		var voice_permissions = voice_channel.permissionsFor(message.client.user);
-		var is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
+		const text_permissions = text_channel.permissionsFor(message.client.user);
+		const voice_permissions = voice_channel.permissionsFor(message.client.user);
+		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
 		if (!text_permissions.has("VIEW_CHANNEL") && !text_permissions.has("SEND_MESSAGES") && !voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK") && !is_admin) {
 			return -1
@@ -34,8 +34,8 @@ module.exports = {
 		return heuristik;
 	},
 	async execute(message, args, client) {
-		/*let text_channel = message.channel;
-		let voice_channel = message.member.voice.channel;
+		/*var text_channel = message.channel;
+		var voice_channel = message.member.voice.channel;
 
 		if(!text_channel || !voice_channel) return false;
 
