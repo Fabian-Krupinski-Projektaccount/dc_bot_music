@@ -51,15 +51,7 @@ module.exports = {
         if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel != voice_channel) return message.reply(" I'm already in a voice channel!");
 
 
-
-
-
-        if (client.guild_list[message.guild.id].isPlaying == false && client.guild_list[message.guild.id].voiceChannel != null) {
-            client.guild_list[message.guild.id].voiceChannel.leave();
-            client.guild_list[message.guild.id].voiceChannel == null;
-        }
         if (client.guild_list[message.guild.id].voiceChannel == null) {
-
             client.guild_list[message.guild.id].voiceChannel =  await channel.join()
 				.then(connection => {
 					connection.voice.setSelfDeaf(true);
