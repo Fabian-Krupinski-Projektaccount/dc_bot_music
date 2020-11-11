@@ -4,8 +4,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const setTitle = require('console-title');
 const consola = require('consola')
-
-
+const db = require('quick.db');
 
 const Discord = require('discord.js');
 
@@ -45,6 +44,9 @@ bot_token_list.forEach(token => {
 /**
  * Client Events
  */
+if(!db.get('guilds')) {
+    db.set('guilds', {});
+}
 client_list.forEach(client => {
     client.on('ready', () => {
         consola.ready(`Bot >>${client.user.tag}<<`);
@@ -57,6 +59,16 @@ client_list.forEach(client => {
                 status: 'online'
             })
         }, 3000);
+
+        client.guilds.cache.forEach(guild => {
+            if(!db.get(`guilds.${guild.id}`)) {
+                db.set(`guilds.${guild.id}`, {
+                    guild_id: guild.id,
+                    command_queue: [],
+                    client_list: []
+                });
+            }
+        });
     });
 });
 
@@ -80,11 +92,11 @@ for (const file of commandFiles) {
 
 
 client_list.forEach(client => {
-    client.on('message', async msg => {
-    	if (msg.author.bot) return;
-    	if (!msg.content.startsWith(client.prefix)) return;
+    client.on('message', async message => {
+    	if (message.author.bot) return;
+    	if (!message.content.startsWith(client.prefix)) return;
 
-    	const args = msg.content.slice(client.prefix.length).trim().split(/ +/g);
+    	const args = message.content.slice(client.prefix.length).trim().split(/ +/g);
     	const commandName = args.shift().toLowerCase();
 
     	const command =
@@ -93,25 +105,23 @@ client_list.forEach(client => {
 
     	if (!command) return;
 
-        if (!client.guild_list[msg.guild.id]) {
-            client.guild_list[msg.guild.id] = {
+        if (!client.guild_list[message.guild.id]) {
+            client.guild_list[message.guild.id] = {
+                voiceChannel: null,
+                volume: 5,
                 music: {
                     queue: new Map(),
-                    isPlaying: false,
-                    dispatcher: null,
-                    voiceChannel: null,
-                    volume: 5
+                    isPlaying: false
                 }
             };
         }
 
-
-        if (client == await getBestClientToRunCommand(msg, args, command)) {
+        if (client == await getBestClientToRunCommand(message, args, command)) {
         	try {
-        		command.execute(msg, args, client);
+        		command.execute(message, args, client);
         	} catch (error) {
         		consola.error(new Error('Executing Command'))
-        		msg.reply("There was an error executing that command.");
+        		message.reply('There was an error executing that command.');
         	}
         }
     });
@@ -125,6 +135,7 @@ async function getBestClientToRunCommand(message, args, command) {
     for (const client of client_list) {
         let id = heuristik.length;
 
+        console.log(client.user.username);
         heuristik[id] = await command.getHeuristikForRunningCommand(message, args, client);
 
         if (heuristik[id-1] < heuristik[id] || !heuristik[id-1]) {

@@ -1,3 +1,4 @@
+const consola = require('consola')
 const Discord = require('discord.js');
 const scdl = require('soundcloud-downloader');
 const ytdl = require('ytdl-core');
@@ -8,7 +9,8 @@ module.exports = {
 	description: "Starts playing or enqueues a song",
 	getHeuristikForRunningCommand(message, args, client) {
 		if (!message.guild.voiceConnection) {
-			client.guild_list[message.guild.id].voiceChannel = null;
+			console.log(client.guild_list[message.guild.id]);
+			//client.guild_list[message.guild.id].voiceChannel = null;
 		}
 
 		var heuristik = 0;
@@ -71,13 +73,8 @@ module.exports = {
         if (client.guild_list[message.guild.id].voiceChannel == null) {
             client.guild_list[message.guild.id].voiceChannel = await voice_channel.join()
 				.then(connection => {
-					console.log(client.guild_list[message.guild.id].voiceChannel);
-					console.log("----------------------------------------------------");
 					connection.voice.setSelfDeaf(true);
 				});
-			console.log(voice_channel);
-			console.log("----------------------------------------------------");
-			console.log(client.guild_list[message.guild.id].voiceChannel);
         }
 	}
 };
