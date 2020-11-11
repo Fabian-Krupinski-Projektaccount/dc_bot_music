@@ -10,22 +10,20 @@ module.exports = {
 
 		const text_channel = message.channel;
 
+		//client cant see text channel
 		if(!text_channel) return -1;
 
 		const text_permissions = text_channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
-		if (!text_permissions.has("SEND_MESSAGES") && !is_admin) {
-			return -1
-		}
+		//client hasn't all needed permissions
+		if (!text_permissions.has("SEND_MESSAGES") && !is_admin) return -1;
 
-		if (text_permissions.has("SEND_MESSAGES") && !is_admin) {
-			heuristik += 2;
-		}
+		//client has all needed permissions
+		if (text_permissions.has("SEND_MESSAGES") && !is_admin) heuristik += 2;
 
-		if (is_admin) {
-			heuristik += 1;
-		}
+		//client is admin
+		if (is_admin) heuristik += 1;
 
 		return heuristik;
 	},

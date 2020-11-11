@@ -17,23 +17,30 @@ module.exports = {
 		const text_channel = message.channel;
 		const voice_channel = message.member.voice.channel;
 
+		//client cant see text or voice channel
 		if(!text_channel || !voice_channel) return -1;
 
 		const text_permissions = text_channel.permissionsFor(message.client.user);
 		const voice_permissions = voice_channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
+		//client hasn't all needed permissions
 		if (!text_permissions.has("SEND_MESSAGES") && !voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK") && !is_admin) return -1;
 
+		//client has all needed permissions
 		if (text_permissions.has("SEND_MESSAGES") && voice_permissions.has("CONNECT") && voice_permissions.has("SPEAK") && !is_admin) heuristik += 2;
 
+		//client is admin
 		if (is_admin) heuristik += 1;
 
 
+		//already in another voice channel
 		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel != voice_channel) return -1;
 
-		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel == voice_channel) heuristik += 100000;
+		//already in same voice channel
+		if (client.guild_list[message.guild.id].voiceChannel == voice_channel) heuristik += 100000;
 
+		//in no voice channel
 		if (client.guild_list[message.guild.id].voiceChannel == null) heuristik += 50000;
 
 
