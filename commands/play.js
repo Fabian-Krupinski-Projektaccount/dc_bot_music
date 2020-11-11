@@ -19,11 +19,11 @@ module.exports = {
 		const voice_permissions = voice_channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
-		if (!text_permissions.has("VIEW_CHANNEL") && !text_permissions.has("SEND_MESSAGES") && !voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK") && !is_admin) {
+		if (!text_permissions.has("SEND_MESSAGES") && !voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK") && !is_admin) {
 			return -1
 		}
 
-		if (text_permissions.has("VIEW_CHANNEL") && text_permissions.has("SEND_MESSAGES") && voice_permissions.has("CONNECT") && voice_permissions.has("SPEAK") && !is_admin) {
+		if (text_permissions.has("SEND_MESSAGES") && voice_permissions.has("CONNECT") && voice_permissions.has("SPEAK") && !is_admin) {
 			heuristik += 2;
 		}
 
@@ -34,24 +34,19 @@ module.exports = {
 		return heuristik;
 	},
 	async execute(message, args, client) {
-		/*var text_channel = message.channel;
-		var voice_channel = message.member.voice.channel;
+		//channels
+		const text_channel = message.channel;
+		const voice_channel = message.member.voice.channel;
 
-		if(!text_channel || !voice_channel) return false;
+		//requirements
+		if(!voice_channel) return message.reply(" You need to join a voice channel first!");
 
-		if (message.client.user.hasPermission('ADMINISTRATOR')) return true;
+		const text_permissions = text_channel.permissionsFor(message.client.user);
+		const voice_permissions = voice_channel.permissionsFor(message.client.user);
+		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
-		var permissions = text_channel.permissionsFor(message.client.user);
-
-		if (!permissions.has("VIEW_CHANNEL") || !permissions.has("SEND_MESSAGES")) return false;
-
-		permissions = voice_channel.permissionsFor(message.client.user);
-
-		if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return false;
-
-		return true;*/
-
-        var channel = message.member.voice.channel;
+		if (!text_permissions.has("SEND_MESSAGES") && !is_admin) return message.author.send("I don't have permission to send messages in this channel");
+		if ((!voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK")) && (!is_admin)) return message.reply(" I don't have permission connect or speak in your voice channel!");
 
         if ((client.guild_list[message.guild.id].voiceChannel != null) && (client.guild_list[message.guild.id].voiceChannel != channel)) {
             return message.reply(" I'm already in a voice channel!");
