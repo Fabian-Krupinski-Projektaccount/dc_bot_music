@@ -42,7 +42,7 @@ module.exports = {
 
 
 		//execute
-		var commands = message.client.commands.array();
+		const commands = message.client.commands.array();
 
 		var helpEmbed = new Discord.MessageEmbed()
 			.setTitle(client.name + " Help")
