@@ -52,18 +52,15 @@ module.exports = {
 
 
         if (client.guild_list[message.guild.id].voiceChannel == null) {
-            client.guild_list[message.guild.id].voiceChannel =  await voice_channel.join()
+            client.guild_list[message.guild.id].voiceChannel = await voice_channel.join()
 				.then(connection => {
+					console.log(client.guild_list[message.guild.id].voiceChannel);
+					console.log("----------------------------------------------------");
 					connection.voice.setSelfDeaf(true);
 				});
 			console.log(voice_channel);
 			console.log("----------------------------------------------------");
 			console.log(client.guild_list[message.guild.id].voiceChannel);
-        }
-        console.log(message.member.voice.channelID);
-        client.guild_list[message.guild.id].voiceChannel = channel;
-        if (client.guild_list[message.guild.id].voiceChannel != null && message.member.voice.channelID == client.guild_list[message.guild.id].voiceChannel.id) {
-            console.log(client.guild_list[message.guild.id].voiceChannel.id);
         }
 	}
 };
