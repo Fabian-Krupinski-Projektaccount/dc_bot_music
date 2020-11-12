@@ -8,6 +8,17 @@ module.exports = {
 	aliases: ["p"],
 	description: "Starts playing or enqueues a song",
 	getHeuristikForRunningCommand(message, args, client) {
+		if (!client.guild_list[message.guild.id]) {
+            client.guild_list[message.guild.id] = {
+                voiceChannel: null,
+                volume: 5,
+                music: {
+                    queue: new Map(),
+                    isPlaying: false
+                }
+            };
+        }
+
 		if (!message.guild.voiceConnection) {
 			console.log(client.guild_list[message.guild.id]);
 			//client.guild_list[message.guild.id].voiceChannel = null;

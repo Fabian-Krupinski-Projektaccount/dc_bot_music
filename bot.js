@@ -5,6 +5,7 @@ const path = require('path');
 const setTitle = require('console-title');
 const consola = require('consola')
 const db = require('quick.db');
+db.delete('guilds');
 
 const Discord = require('discord.js');
 
@@ -59,16 +60,6 @@ client_list.forEach(client => {
                 status: 'online'
             })
         }, 3000);
-
-        client.guilds.cache.forEach(guild => {
-            if(!db.get(`guilds.${guild.id}`)) {
-                db.set(`guilds.${guild.id}`, {
-                    guild_id: guild.id,
-                    command_queue: [],
-                    client_list: []
-                });
-            }
-        });
     });
 });
 
@@ -93,6 +84,16 @@ for (const file of commandFiles) {
 
 client_list.forEach(client => {
     client.on('message', async message => {
+
+        if(!db.get(`guilds.${message.guild.id}`)) {
+            db.set(`guilds.${message.guild.id}`, {
+                guild_id: message.guild.id,
+                command_queue: [],
+            });
+        }
+
+
+
     	if (message.author.bot) return;
     	if (!message.content.startsWith(client.prefix)) return;
 
@@ -105,45 +106,92 @@ client_list.forEach(client => {
 
     	if (!command) return;
 
-        if (!client.guild_list[message.guild.id]) {
-            client.guild_list[message.guild.id] = {
-                voiceChannel: null,
-                volume: 5,
-                music: {
-                    queue: new Map(),
-                    isPlaying: false
-                }
-            };
+
+        var command_object = {
+            channel_id: message.channel.id,
+            message_id: message.id,
+            args: args,
+            command_name: command.name,
+            client_ids: []
+        };
+
+        console.log(db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object));
+        if (db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, message_id, message.id) == -1) {
+            db.push(`guilds.${message.guild.id}.command_queue`, command_object);
+            //runCommand(message.guild.id);
         }
 
-        if (client == await getBestClientToRunCommand(message, args, command)) {
-        	try {
-        		command.execute(message, args, client);
-        	} catch (error) {
-        		consola.error(new Error('Executing Command'))
-        		message.reply('There was an error executing that command.');
-        	}
+        var command_index = db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, message_id, message.id);
+        command_object = db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
+
+        //console.log(db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id));
+
+        if (db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id) == -1) {
+            db.push(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`, client.user.id);
         }
+
+        //console.log(db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id));
+
+
+        /*console.log("-----------------------");
+        console.log(command_object);
+        console.log("-----------------------");
+        for (const command of command_queue) {
+            console.log(command);
+        }
+        console.log("-----------------------");*/
+
+
+
+
+
+        /*console.log("------------------------------------------");
+        console.log(command_object);
+        console.log(db.get(`guilds.${message.guild.id}.command_queue`).indexOf(command_object));
+        console.log(db.get(`guilds.${message.guild.id}.command_queue`));
+        console.log("------------------------------------------");*/
     });
 });
 
+function runCommand(guild_id) {
+    var command_queue = db.get(`guilds.${guild_id}.command_queue`);
+    var command_object = command_queue.shift()
 
-async function getBestClientToRunCommand(message, args, command) {
-    var heuristik = [];
-    var highestHeuristikClient;
+    setTimeout(async function() {
+        let heuristik_list = [];
+        let highestHeuristikClient;
 
-    for (const client of client_list) {
-        let id = heuristik.length;
+        //console.log(db.get(`guilds.${guild_id}.client_list`));
 
-        console.log(client.user.username);
-        heuristik[id] = await command.getHeuristikForRunningCommand(message, args, client);
+        for (const client of db.get(`guilds.${guild_id}.client_id_list`)) {
+            console.log(client);
+            let id = heuristik_list.length;
 
-        if (heuristik[id-1] < heuristik[id] || !heuristik[id-1]) {
-            highestHeuristikClient = client;
+            heuristik_list[id] = await client.commands.get(command_object.command_name).getHeuristikForClientToRunCommand(command_object.message, command_object.args, command_object.client);
+
+            if (heuristik_list[id-1] < heuristik_list[id] || !heuristik_list[id-1]) {
+                highestHeuristikClient = client;
+            }
         }
-    }
 
-    return highestHeuristikClient;
+        //highestHeuristikClient.commands.get(command_object.command_name).execute(command_object.message, command_object.args, command_object.client);
+    }, 200);
+}
+
+
+
+Array.prototype.objectIndexOf = function(searchObject, searchTerm) {
+    if(searchTerm) {
+        for(var i = 0; i < this.length; i++) {
+            if (this[i][searchTerm] === searchObject[searchTerm]) return i;
+        }
+        return -1;
+    } else {
+        for(var i = 0; i < this.length; i++) {
+            if (JSON.stringify(this[i]) === JSON.stringify(searchObject)) return i;
+        }
+        return -1;
+    }
 }
 
 //https://www.voidcanvas.com/make-console-log-output-colorful-and-stylish-in-browser-node/

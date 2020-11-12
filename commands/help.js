@@ -4,11 +4,12 @@ module.exports = {
 	name: "help",
 	aliases: ["h"],
 	description: "Display all commands and descriptions",
-	getHeuristikForRunningCommand(message, args, client) {
+	getHeuristikForClientToRunCommand(message, args, client) {
 		var heuristik = 0;
 
 
 		const text_channel = message.channel;
+		console.log(text_channel);
 
 		//client cant see text channel
 		if(!text_channel) return -1;
@@ -30,7 +31,6 @@ module.exports = {
 	execute(message, args, client) {
 		//channels
 		const text_channel = message.channel;
-
 		//requirements
 		const text_permissions = text_channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
