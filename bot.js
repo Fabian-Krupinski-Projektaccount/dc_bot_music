@@ -115,13 +115,13 @@ client_list.forEach(client => {
             client_ids: []
         };
 
-        console.log(db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object));
-        if (db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, message_id, message.id) == -1) {
+        console.log(db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, message_id));
+        if (db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, message_id) == -1) {
             db.push(`guilds.${message.guild.id}.command_queue`, command_object);
             //runCommand(message.guild.id);
         }
 
-        var command_index = db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, message_id, message.id);
+        var command_index = db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, message_id);
         command_object = db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
 
         //console.log(db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id));
