@@ -6,6 +6,7 @@ var Database = require('./util/Database');
 const database = new Database();
 
 require('dotenv').config()
+const Discord = require('discord.js');
 const fs = require('fs-extra');
 const path = require('path');
 const setTitle = require('console-title');
@@ -18,8 +19,6 @@ if(!db.get('guilds')) {
 if (dev) {
     db.delete('guilds');
 }
-
-const Discord = require('discord.js');
 
 
 
