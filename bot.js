@@ -58,7 +58,17 @@ bot_token_list.forEach(token => {
  */
 client_list.forEach(client => {
     client.on('ready', () => {
+        let user_id = client.user.id;
+
         consola.ready(`Bot >>${client.user.tag}<<`);
+
+        for (const guild of client.guilds.cache) {
+            if (!guild[1].members.cache.get(user_id).guild.voice || !guild[1].members.cache.get(user_id).guild.voice.channel) continue;
+            let voice_channel = guild[1].members.cache.get(user_id).guild.voice.channel;
+            voice_channel.leave();  //After restart has to leave-join-leave to rly get out of channel dunno why
+            voice_channel.join();
+            voice_channel.leave();
+        }
 
         setInterval(function() {
             client.user.setPresence({
