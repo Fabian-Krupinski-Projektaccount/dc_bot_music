@@ -2,14 +2,14 @@ const dev = true;
 
 
 //Modules
+var Database = require('./util/Database');
+const database = new Database();
+
 require('dotenv').config()
 const fs = require('fs-extra');
 const path = require('path');
 const setTitle = require('console-title');
 const consola = require('consola')
-var Database = require('./util/Database');
-const database = new Database();
-Database = "";
 const db = require('quick.db');
 if(!db.get('guilds')) {
     db.set('guilds', {});
