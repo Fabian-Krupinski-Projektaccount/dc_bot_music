@@ -18,10 +18,11 @@ module.exports = {
             };
         }
 
-		if (!message.guild.voiceConnection) {
+		console.log(message.guild.voiceConnection);
+		/*if (!message.guild.voiceConnection) {
 			console.log(client.guild_list[message.guild.id]);
 			//client.guild_list[message.guild.id].voiceChannel = null;
-		}
+		}*/
 
 		var heuristik = 0;
 
