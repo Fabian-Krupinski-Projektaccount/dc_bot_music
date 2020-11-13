@@ -115,13 +115,11 @@ client_list.forEach(client => {
             client_ids: []
         };
 
-        console.log(db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, message_id));
-        if (db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, message_id) == -1) {
+        if (db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, 'message_id') == -1) {
             db.push(`guilds.${message.guild.id}.command_queue`, command_object);
-            //runCommand(message.guild.id);
         }
 
-        var command_index = db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, message_id);
+        var command_index = db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, 'message_id');
         command_object = db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
 
         //console.log(db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id));
@@ -130,40 +128,21 @@ client_list.forEach(client => {
             db.push(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`, client.user.id);
         }
 
-        //console.log(db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id));
-
-
-        /*console.log("-----------------------");
-        console.log(command_object);
-        console.log("-----------------------");
-        for (const command of command_queue) {
-            console.log(command);
-        }
-        console.log("-----------------------");*/
-
-
-
-
-
-        /*console.log("------------------------------------------");
-        console.log(command_object);
-        console.log(db.get(`guilds.${message.guild.id}.command_queue`).indexOf(command_object));
         console.log(db.get(`guilds.${message.guild.id}.command_queue`));
-        console.log("------------------------------------------");*/
+
+        //console.log(db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id));
     });
 });
 
 function runCommand(guild_id) {
-    var command_queue = db.get(`guilds.${guild_id}.command_queue`);
-    var command_object = command_queue.shift()
+    var command_object = db.get(`guilds.${guild_id}.command_queue`).shift();
+    var command_index = db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, 'message_id')
 
     setTimeout(async function() {
         let heuristik_list = [];
         let highestHeuristikClient;
 
-        //console.log(db.get(`guilds.${guild_id}.client_list`));
-
-        for (const client of db.get(`guilds.${guild_id}.client_id_list`)) {
+        for (const client of db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) {
             console.log(client);
             let id = heuristik_list.length;
 
