@@ -20,6 +20,7 @@ module.exports = {
 
 		//Set voiceChannel in guild_list to null when client is in no voice.channel
 		if (!message.guild.voice || !message.guild.voice.channel) {
+			console.log("set voiceChannel to null");
 			client.guild_list[message.guild.id].voiceChannel = null;
 		}
 
@@ -45,17 +46,25 @@ module.exports = {
 		//client is admin
 		if (is_admin) heuristik += 1;
 
+		/*console.log("------read voiceChannel------");
+		if (!client.guild_list[message.guild.id].voiceChannel) {
+			console.log(client.guild_list[message.guild.id]);
+		} else {
+			console.log(client.guild_list[message.guild.id].voiceChannel.id);
+		}
+		console.log("------------");*/
 
 		//already in another voice channel
-		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel != voice_channel) return -1;
+		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel.id != voice_channel.id) return -1;
 
 		//already in same voice channel
-		if (client.guild_list[message.guild.id].voiceChannel == voice_channel) heuristik += 100000;
+		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel.id == voice_channel.id) heuristik += 100000;
 
 		//in no voice channel
 		if (client.guild_list[message.guild.id].voiceChannel == null) heuristik += 50000;
 
-
+		//console.log(message.member.voice.channel.id);
+		console.log(heuristik);
 		return heuristik;
 	},
 	async execute(message, args, client) {
@@ -77,8 +86,12 @@ module.exports = {
 
 
         if (client.guild_list[message.guild.id].voiceChannel == null) {
-            client.guild_list[message.guild.id].voiceChannel = await voice_channel.join()
+            voice_channel.join()
 				.then(connection => {
+					client.guild_list[message.guild.id].voiceChannel = connection.channel;
+					/*console.log("------set voiceChannel------");
+					console.log(client.guild_list[message.guild.id].voiceChannel.id);
+					console.log("------------");*/
 					connection.voice.setSelfDeaf(true);
 				});
         }

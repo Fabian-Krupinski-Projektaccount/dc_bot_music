@@ -31,10 +31,10 @@ setTitle(`${conf.name} [${conf.prefix}]`);
 
 
 const bot_token_list = [
-    process.env.DISCORD_BOT_TOKEN0,
+    process.env.DISCORD_BOT_TOKEN0/*,
     process.env.DISCORD_BOT_TOKEN1,
     process.env.DISCORD_BOT_TOKEN2,
-    process.env.DISCORD_BOT_TOKEN3
+    process.env.DISCORD_BOT_TOKEN3*/
 ];
 var client_list = [];
 
