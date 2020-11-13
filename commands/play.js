@@ -59,7 +59,7 @@ module.exports = {
 
 		return heuristik;
 	},
-	async execute(message, args, client) {
+	async execute(message_id, args, client) {
 		if (!message.guild.voiceConnection) {
 			client.guild_list[message.guild.id].voiceChannel = null;
 		}

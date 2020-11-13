@@ -121,43 +121,50 @@ client_list.forEach(client => {
 
         if (database.getCommandQueue(message.guild.id).objectIndexOf(command_object, 'message_id') == -1) {
             database.pushCommand(message.guild.id, command_object);
+            runCommand(message.guild.id);
         }
 
         var command_index = database.getCommandIndex(message.guild.id, message.id);
         command_object = db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
 
-        //console.log(db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id));
-
         if (database.isClientIdInList(message.guild.id, command_index, client.user.id) == false) {
             database.pushClientId(message.guild.id, command_index, client.user.id);
         }
 
-        console.log(database.getCommandQueue(message.guild.id));
-
-        //console.log(db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id));
+        //console.log(database.getCommandQueue(message.guild.id));
     });
 });
 
 function runCommand(guild_id) {
     var command_object = database.getCommandQueue(guild_id).shift();
-    var command_index = database.getCommandIndex(guild_id, command_object.message_id);      //database.getCommandQueue().objectIndexOf(command_object, 'message_id')
+    var command_index = database.getCommandIndex(guild_id, command_object.message_id);
 
     setTimeout(async function() {
-        let heuristik_list = [];
-        let highestHeuristikClient;
+        var heuristik_list = [];
+        var highestHeuristikClient;
+        var message;
 
-        for (const client of db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) {
-            console.log(client);
+        for (const client_id of db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) {
+            for (let _client of client_list) {
+                if (_client.user.id == client_id) {
+                    var client = _client;
+                    break;
+                }
+            }
+            //console.log(client);
             let id = heuristik_list.length;
 
-            heuristik_list[id] = await client.commands.get(command_object.command_name).getHeuristikForClientToRunCommand(command_object.message, command_object.args, command_object.client);
+            message = client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id);
+            //console.log(client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id));
+            heuristik_list[id] = await client.commands.get(command_object.command_name).getHeuristikForClientToRunCommand(message, command_object.args, command_object.client);
 
             if (heuristik_list[id-1] < heuristik_list[id] || !heuristik_list[id-1]) {
                 highestHeuristikClient = client;
             }
         }
 
-        //highestHeuristikClient.commands.get(command_object.command_name).execute(command_object.message, command_object.args, command_object.client);
+        //console.log(highestHeuristikClient);
+        highestHeuristikClient.commands.get(command_object.command_name).execute(message, command_object.args, highestHeuristikClient);
     }, 200);
 }
 
