@@ -1,3 +1,6 @@
+const dev = true;
+
+
 //Modules
 require('dotenv').config()
 const fs = require('fs-extra');
@@ -9,7 +12,9 @@ const database = new Database();
 Database = "";
 const db = require('quick.db');
 
-db.delete('guilds');
+if (dev) {
+    db.delete('guilds');
+}
 
 const Discord = require('discord.js');
 
