@@ -88,7 +88,6 @@ for (const file of commandFiles) {
 
 client_list.forEach(client => {
     client.on('message', async message => {
-
         if(!db.get(`guilds.${message.guild.id}`)) {
             db.set(`guilds.${message.guild.id}`, {
                 guild_id: message.guild.id,
@@ -119,9 +118,9 @@ client_list.forEach(client => {
             client_ids: []
         };
 
-        if (database.getCommandQueue(message.guild.id).objectIndexOf(command_object, 'message_id') == -1) {
+        if (database.getCommandIndex(message.guild.id, message.id) == -1) {
             database.pushCommand(message.guild.id, command_object);
-            runCommand(message.guild.id);
+            runCommand(message.guild.id, command_object);
         }
 
         var command_index = database.getCommandIndex(message.guild.id, message.id);
@@ -135,8 +134,8 @@ client_list.forEach(client => {
     });
 });
 
-function runCommand(guild_id) {
-    var command_object = database.getCommandQueue(guild_id).shift();
+function runCommand(guild_id, command_object) {
+    //var command_object = database.getCommandQueue(guild_id).shift();
     var command_index = database.getCommandIndex(guild_id, command_object.message_id);
 
     setTimeout(async function() {
@@ -151,38 +150,21 @@ function runCommand(guild_id) {
                     break;
                 }
             }
-            //console.log(client);
             let id = heuristik_list.length;
 
             message = client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id);
             //console.log(client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id));
-            heuristik_list[id] = await client.commands.get(command_object.command_name).getHeuristikForClientToRunCommand(message, command_object.args, command_object.client);
+            heuristik_list[id] = client.commands.get(command_object.command_name).getHeuristikForClientToRunCommand(message, command_object.args, client);
 
             if (heuristik_list[id-1] < heuristik_list[id] || !heuristik_list[id-1]) {
                 highestHeuristikClient = client;
             }
         }
 
-        //console.log(highestHeuristikClient);
         highestHeuristikClient.commands.get(command_object.command_name).execute(message, command_object.args, highestHeuristikClient);
     }, 200);
 }
 
-
-
-Array.prototype.objectIndexOf = function(searchObject, searchTerm) {
-    if(searchTerm) {
-        for(var i = 0; i < this.length; i++) {
-            if (this[i][searchTerm] === searchObject[searchTerm]) return i;
-        }
-        return -1;
-    } else {
-        for(var i = 0; i < this.length; i++) {
-            if (JSON.stringify(this[i]) === JSON.stringify(searchObject)) return i;
-        }
-        return -1;
-    }
-}
 
 //https://www.voidcanvas.com/make-console-log-output-colorful-and-stylish-in-browser-node/
 //https://github.com/eritislami/evobot/blob/f9c0cf69a636476f0c3c60f799842c029ee7e34d/index.js#L25

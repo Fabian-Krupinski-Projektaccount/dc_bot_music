@@ -6,7 +6,7 @@ module.exports = {
 	name: "play",
 	aliases: ["p"],
 	description: "Starts playing or enqueues a song",
-	getHeuristikForRunningCommand(message, args, client) {
+	getHeuristikForClientToRunCommand(message, args, client) {
 		if (!client.guild_list[message.guild.id]) {
             client.guild_list[message.guild.id] = {
                 voiceChannel: null,
@@ -18,7 +18,8 @@ module.exports = {
             };
         }
 
-		console.log(message.guild.voiceConnection);
+		console.log(message);
+		//console.log(message.guild.voiceConnection);
 		/*if (!message.guild.voiceConnection) {
 			console.log(client.guild_list[message.guild.id]);
 			//client.guild_list[message.guild.id].voiceChannel = null;
@@ -59,7 +60,7 @@ module.exports = {
 
 		return heuristik;
 	},
-	async execute(message_id, args, client) {
+	async execute(message, args, client) {
 		if (!message.guild.voiceConnection) {
 			client.guild_list[message.guild.id].voiceChannel = null;
 		}
