@@ -31,10 +31,10 @@ setTitle(`${conf.name} [${conf.prefix}]`);
 
 
 const bot_token_list = [
-    process.env.DISCORD_BOT_TOKEN0/*,
+    process.env.DISCORD_BOT_TOKEN0,
     process.env.DISCORD_BOT_TOKEN1,
     process.env.DISCORD_BOT_TOKEN2,
-    process.env.DISCORD_BOT_TOKEN3*/
+    process.env.DISCORD_BOT_TOKEN3
 ];
 var client_list = [];
 
@@ -154,9 +154,11 @@ function runCommand(guild_id, command_object) {
     setTimeout(async function() {
         var heuristik_list = [];
         var highestHeuristikClient;
+        var highestHeuristik = -99999;
         var message;
 
         for (const client_id of db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) {
+            console.log("1");
             for (let _client of client_list) {
                 if (_client.user.id == client_id) {
                     var client = _client;
@@ -169,11 +171,16 @@ function runCommand(guild_id, command_object) {
             //console.log(client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id));
             heuristik_list[id] = client.commands.get(command_object.command_name).getHeuristikForClientToRunCommand(message, command_object.args, client);
 
-            if (heuristik_list[id-1] < heuristik_list[id] || !heuristik_list[id-1]) {
+            if (highestHeuristik < heuristik_list[id] || !heuristik_list[id-1]) {
+                console.log(client.user.username + ': ' + highestHeuristik + ' < ' + heuristik_list[id]);
+                highestHeuristik = heuristik_list[id];
                 highestHeuristikClient = client;
+                console.log(highestHeuristikClient.user.username);
             }
         }
 
+        console.log("2");
+        console.log(highestHeuristikClient.user.username);
         highestHeuristikClient.commands.get(command_object.command_name).execute(message, command_object.args, highestHeuristikClient);
     }, 200);
 }

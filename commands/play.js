@@ -19,9 +19,9 @@ module.exports = {
         }
 
 		//Set voiceChannel in guild_list to null when client is in no voice.channel
-		if (!message.guild.voice || !message.guild.voice.channel) {
+		/*if (!message.guild.voice || !message.guild.voice.channel) {
 			client.guild_list[message.guild.id].voiceChannel = null;
-		}
+		}*/
 
 		var heuristik = 0;
 
@@ -46,6 +46,7 @@ module.exports = {
 		if (is_admin) heuristik += 1;
 
 		/*console.log("------read voiceChannel------");
+		console.log(client.user.username);
 		if (!client.guild_list[message.guild.id].voiceChannel) {
 			console.log(client.guild_list[message.guild.id]);
 		} else {
@@ -85,10 +86,12 @@ module.exports = {
 
 
         if (client.guild_list[message.guild.id].voiceChannel == null) {
+			console.log(voice_channel);
             voice_channel.join()
 				.then(connection => {
 					client.guild_list[message.guild.id].voiceChannel = connection.channel;
 					/*console.log("------set voiceChannel------");
+					console.log(client.user.username);
 					console.log(client.guild_list[message.guild.id].voiceChannel.id);
 					console.log("------------");*/
 					connection.voice.setSelfDeaf(true);
