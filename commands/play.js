@@ -1,4 +1,3 @@
-const consola = require('consola')
 const Discord = require('discord.js');
 const scdl = require('soundcloud-downloader');
 const ytdl = require('ytdl-core');
