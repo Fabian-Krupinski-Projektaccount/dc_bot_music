@@ -4,7 +4,11 @@ const fs = require('fs-extra');
 const path = require('path');
 const setTitle = require('console-title');
 const consola = require('consola')
+var Database = require('./util/Database');
+const database = new Database();
+Database = "";
 const db = require('quick.db');
+
 db.delete('guilds');
 
 const Discord = require('discord.js');
@@ -115,28 +119,28 @@ client_list.forEach(client => {
             client_ids: []
         };
 
-        if (db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, 'message_id') == -1) {
-            db.push(`guilds.${message.guild.id}.command_queue`, command_object);
+        if (database.getCommandQueue(message.guild.id).objectIndexOf(command_object, 'message_id') == -1) {
+            database.pushCommand(message.guild.id, command_object);
         }
 
-        var command_index = db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, 'message_id');
+        var command_index = database.getCommandIndex(message.guild.id, message.id);
         command_object = db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
 
         //console.log(db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id));
 
-        if (db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id) == -1) {
-            db.push(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`, client.user.id);
+        if (database.isClientIdInList(message.guild.id, command_index, client.user.id) == false) {
+            database.pushClientId(message.guild.id, command_index, client.user.id);
         }
 
-        console.log(db.get(`guilds.${message.guild.id}.command_queue`));
+        console.log(database.getCommandQueue(message.guild.id));
 
         //console.log(db.get(`guilds.${message.guild.id}.command_queue[${command_index}].client_ids`).indexOf(client.user.id));
     });
 });
 
 function runCommand(guild_id) {
-    var command_object = db.get(`guilds.${guild_id}.command_queue`).shift();
-    var command_index = db.get(`guilds.${message.guild.id}.command_queue`).objectIndexOf(command_object, 'message_id')
+    var command_object = database.getCommandQueue(guild_id).shift();
+    var command_index = database.getCommandIndex(guild_id, command_object.message_id);      //database.getCommandQueue().objectIndexOf(command_object, 'message_id')
 
     setTimeout(async function() {
         let heuristik_list = [];
