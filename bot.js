@@ -96,7 +96,6 @@ client_list.forEach(client => {
         }
 
 
-
     	if (message.author.bot) return;
     	if (!message.content.startsWith(client.prefix)) return;
 

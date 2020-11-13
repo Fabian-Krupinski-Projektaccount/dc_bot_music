@@ -18,12 +18,9 @@ module.exports = {
             };
         }
 
-		console.log(message);
-		//console.log(message.guild.voiceConnection);
-		/*if (!message.guild.voiceConnection) {
-			console.log(client.guild_list[message.guild.id]);
-			//client.guild_list[message.guild.id].voiceChannel = null;
-		}*/
+		if (!message.guild.voice || !message.guild.voice.channel) {
+			client.guild_list[message.guild.id].voiceChannel = null;
+		}
 
 		var heuristik = 0;
 
@@ -61,10 +58,6 @@ module.exports = {
 		return heuristik;
 	},
 	async execute(message, args, client) {
-		if (!message.guild.voiceConnection) {
-			client.guild_list[message.guild.id].voiceChannel = null;
-		}
-
 		//channels
 		const text_channel = message.channel;
 		const voice_channel = message.member.voice.channel;
