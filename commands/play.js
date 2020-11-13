@@ -18,6 +18,7 @@ module.exports = {
             };
         }
 
+		//Set voiceChannel in guild_list to null when client is in no voice.channel
 		if (!message.guild.voice || !message.guild.voice.channel) {
 			client.guild_list[message.guild.id].voiceChannel = null;
 		}
