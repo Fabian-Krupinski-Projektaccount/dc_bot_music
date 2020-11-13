@@ -11,6 +11,9 @@ var Database = require('./util/Database');
 const database = new Database();
 Database = "";
 const db = require('quick.db');
+if(!db.get('guilds')) {
+    db.set('guilds', {});
+}
 
 if (dev) {
     db.delete('guilds');
@@ -54,9 +57,6 @@ bot_token_list.forEach(token => {
 /**
  * Client Events
  */
-if(!db.get('guilds')) {
-    db.set('guilds', {});
-}
 client_list.forEach(client => {
     client.on('ready', () => {
         consola.ready(`Bot >>${client.user.tag}<<`);
