@@ -4,7 +4,7 @@ module.exports = {
 	name: "help",
 	aliases: ["h"],
 	description: "Display all commands and descriptions",
-	getHeuristikForClientToRunCommand(message, args, client) {
+	getHeuristikForClient(message, args, client) {
 		var heuristik = 0;
 
 		const text_channel = message.channel;

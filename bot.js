@@ -173,7 +173,7 @@ function runCommand(guild_id, command_object) {
 
 
             //get heuristik for client
-            heuristik_list[heuristik_id] = client.commands.get(command_object.command_name).getHeuristikForClientToRunCommand(message, command_object.args, client);
+            heuristik_list[heuristik_id] = client.commands.get(command_object.command_name).getHeuristikForClient(message, command_object.args, client);
 
             //if heuristik for client than old highestHeuristik make heuristik new highestHeuristik
             if (highestHeuristik < heuristik_list[heuristik_id] || !heuristik_list[heuristik_id-1]) {

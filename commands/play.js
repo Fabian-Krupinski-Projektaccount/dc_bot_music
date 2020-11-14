@@ -6,7 +6,7 @@ module.exports = {
 	name: "play",
 	aliases: ["p"],
 	description: "Starts playing or enqueues a song",
-	getHeuristikForClientToRunCommand(message, args, client) {
+	getHeuristikForClient(message, args, client) {
 		if (!client.guild_list[message.guild.id]) {
             client.guild_list[message.guild.id] = {
                 voiceChannel: null,
