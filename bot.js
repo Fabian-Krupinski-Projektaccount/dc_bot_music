@@ -2,7 +2,7 @@ const dev = true;
 
 
 //Modules
-var Database = require('./util/Database');
+const Database = require('./util/Database');
 const database = new Database();
 
 require('dotenv').config()
@@ -39,7 +39,7 @@ const bot_token_list = [
 var client_list = [];
 
 bot_token_list.forEach(token => {
-    let client_id = client_list.length;     //first run =0
+    const client_id = client_list.length;     //first run =0
 
     client_list[client_id] = new Discord.Client()
 
@@ -58,13 +58,13 @@ bot_token_list.forEach(token => {
  */
 client_list.forEach(client => {
     client.on('ready', () => {
-        let user_id = client.user.id;
+        const user_id = client.user.id;
 
         consola.ready(`Bot >>${client.user.tag}<<`);
 
         for (const guild of client.guilds.cache) {
             if (!guild[1].members.cache.get(user_id).guild.voice || !guild[1].members.cache.get(user_id).guild.voice.channel) continue;
-            let voice_channel = guild[1].members.cache.get(user_id).guild.voice.channel;
+            const voice_channel = guild[1].members.cache.get(user_id).guild.voice.channel;
             voice_channel.leave();  //After restart has to leave-join-leave to rly get out of channel dunno why
             voice_channel.join();
             voice_channel.leave();
@@ -136,7 +136,7 @@ client_list.forEach(client => {
             runCommand(message.guild.id, command_object);
         }
 
-        var command_index = database.getCommandIndex(message.guild.id, message.id);
+        const command_index = database.getCommandIndex(message.guild.id, message.id);
         command_object = db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
 
         if (database.isClientIdInList(message.guild.id, command_index, client.user.id) == false) {
@@ -149,7 +149,7 @@ client_list.forEach(client => {
 
 function runCommand(guild_id, command_object) {
     var command_object = command_object;
-    var command_index = database.getCommandIndex(guild_id, command_object.message_id);
+    const command_index = database.getCommandIndex(guild_id, command_object.message_id);
 
     setTimeout(async function() {
         var heuristik_list = [];
@@ -159,7 +159,7 @@ function runCommand(guild_id, command_object) {
         for (const client_id of db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) {
 
             //Get client to client_id
-            for (let _client of client_list) {
+            for (const _client of client_list) {
                 if (_client.user.id == client_id) {
                     var client = _client;
                     break;
@@ -167,9 +167,9 @@ function runCommand(guild_id, command_object) {
             }
 
 
-            let heuristik_id = heuristik_list.length;
+            const heuristik_id = heuristik_list.length;
             //get message to command_object.message_id
-            var message = client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id);
+            const message = client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id);
 
 
             //get heuristik for client
