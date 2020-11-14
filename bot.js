@@ -190,5 +190,17 @@ function runCommand(guild_id, command_object) {
 }
 
 
-//https://www.voidcanvas.com/make-console-log-output-colorful-and-stylish-in-browser-node/
-//https://github.com/eritislami/evobot/blob/f9c0cf69a636476f0c3c60f799842c029ee7e34d/index.js#L25
+
+
+var search = require('youtube-search');
+
+var opts = {
+    maxResults: 5,
+    key: process.env.YOUTUBE_API_KEY
+};
+
+search('music', opts, function(err, results) {
+  if(err) return console.log(err);
+
+  console.dir(results);
+});
