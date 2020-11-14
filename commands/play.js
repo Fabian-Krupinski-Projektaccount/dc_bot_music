@@ -30,7 +30,7 @@ module.exports = {
 
 
 		const text_channel = message.channel;
-		const voice_channel = message.member.voice.channel;
+		const voice_channel = client.channels.cache.get(message.member.voice.channel.id);
 
 		//client cant see text or voice channel
 		if(!text_channel || !voice_channel) return -1;
