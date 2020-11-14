@@ -10,7 +10,7 @@ class Database {
     }
 
     getCommandIndex(guild_id, message_id) {
-        var command_queue = this.getCommandQueue(guild_id);
+        let command_queue = this.getCommandQueue(guild_id);
         for(var i = 0; i < command_queue.length; i++) {
             if (command_queue[i]['message_id'] === message_id) return i;
         }
