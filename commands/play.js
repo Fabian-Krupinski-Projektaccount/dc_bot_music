@@ -1,5 +1,7 @@
 const Discord = require('discord.js');
+const scsearch = require('soundcloud-searcher');
 const scdl = require('soundcloud-downloader');
+const ytsearch = require('youtube-search');
 const ytdl = require('ytdl-core');
 
 module.exports = {
