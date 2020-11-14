@@ -156,6 +156,8 @@ function runCommand(guild_id, command_object) {
         var highestHeuristik = -99999;
         var highestHeuristikClient;
 
+        var message;
+
         for (const client_id of db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) {
 
             //Get client to client_id
@@ -169,7 +171,7 @@ function runCommand(guild_id, command_object) {
 
             const heuristik_id = heuristik_list.length;
             //get message to command_object.message_id
-            const message = client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id);
+            message = client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id);
 
 
             //get heuristik for client
