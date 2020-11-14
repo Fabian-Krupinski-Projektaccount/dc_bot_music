@@ -29,7 +29,7 @@ module.exports = {
 
 		var heuristik = 0;
 
-
+		//channels
 		const TEXT_CHANNEL = message.channel;
 		const VOICE_CHANNEL = client.channels.cache.get(message.member.voice.channel.id);
 
