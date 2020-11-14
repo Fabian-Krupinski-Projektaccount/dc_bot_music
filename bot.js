@@ -192,7 +192,7 @@ function runCommand(guild_id, command_object) {
 
 
 
-var search = require('youtube-search');
+/*var search = require('youtube-search');
 
 var opts = {
     maxResults: 5,
@@ -203,4 +203,4 @@ search('music', opts, function(err, results) {
   if(err) return console.log(err);
 
   console.dir(results);
-});
+});*/
