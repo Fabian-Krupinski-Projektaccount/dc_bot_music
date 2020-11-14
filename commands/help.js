@@ -28,9 +28,9 @@ module.exports = {
 	},
 	execute(message, args, client) {
 		//channels
-		const text_channel = message.channel;
+		const TEXT_CHANNEL = message.channel;
 		//requirements
-		const text_permissions = text_channel.permissionsFor(message.client.user);
+		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
 		if (!text_permissions.has("SEND_MESSAGES") && !is_admin) return message.author.send("I don't have permission to send messages in this channel!");
@@ -54,6 +54,6 @@ module.exports = {
 
 		helpEmbed.setTimestamp();
 
-		return text_channel.send(helpEmbed).catch(console.error);
+		return TEXT_CHANNEL.send(helpEmbed).catch(console.error);
 	}
 };

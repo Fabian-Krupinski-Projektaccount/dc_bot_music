@@ -70,24 +70,24 @@ module.exports = {
 	},
 	async execute(message, args, client) {
 		//channels
-		const text_channel = message.channel;
-		const voice_channel = client.channels.cache.get(message.member.voice.channel.id);
+		const TEXT_CHANNEL = message.channel;
+		const VOICE_CHANNEL = client.channels.cache.get(message.member.voice.channel.id);
 
 		//requirements
-		if(!voice_channel) return message.reply(" You need to join a voice channel first!");
+		if(!VOICE_CHANNEL) return message.reply(" You need to join a voice channel first!");
 
-		const text_permissions = text_channel.permissionsFor(message.client.user);
+		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
 		const voice_permissions = message.member.voice.channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
 		if (!text_permissions.has("SEND_MESSAGES") && !is_admin) return message.author.send("I don't have permission to send messages in this channel!");
 		if ((!voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK")) && (!is_admin)) return message.reply(" I don't have permission connect or speak in your voice channel!");
 
-        if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel != voice_channel) return message.reply(" all clients are already in voice channels!");
+        if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel != VOICE_CHANNEL) return message.reply(" all clients are already in voice channels!");
 
 
         if (client.guild_list[message.guild.id].voiceChannel == null) {
-            voice_channel.join()
+            VOICE_CHANNEL.join()
 				.then(connection => {
 					client.guild_list[message.guild.id].voiceChannel = connection.channel;
 					/*console.log("------set voiceChannel------");
