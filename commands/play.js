@@ -29,14 +29,14 @@ module.exports = {
 		var heuristik = 0;
 
 
-		const text_channel = message.channel;
-		const voice_channel = client.channels.cache.get(message.member.voice.channel.id);
+		const TEXT_CHANNEL = message.channel;
+		const VOICE_CHANNEL = client.channels.cache.get(message.member.voice.channel.id);
 
 		//client cant see text or voice channel
-		if(!text_channel || !voice_channel) return -1;
+		if(!TEXT_CHANNEL || !VOICE_CHANNEL) return -1;
 
-		const text_permissions = text_channel.permissionsFor(message.client.user);
-		const voice_permissions = voice_channel.permissionsFor(message.client.user);
+		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
+		const voice_permissions = VOICE_CHANNEL.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
 		//client hasn't all needed permissions
@@ -58,10 +58,10 @@ module.exports = {
 		console.log("------------");*/
 
 		//already in another voice channel
-		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel.id != voice_channel.id) return -1;
+		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel.id != VOICE_CHANNEL.id) return -1;
 
 		//already in same voice channel
-		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel.id == voice_channel.id) heuristik += 100000;
+		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel.id == VOICE_CHANNEL.id) heuristik += 100000;
 
 		//in no voice channel
 		if (client.guild_list[message.guild.id].voiceChannel == null) heuristik += 50000;
