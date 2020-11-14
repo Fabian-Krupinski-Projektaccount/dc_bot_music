@@ -7,6 +7,7 @@ module.exports = {
 	getHeuristikForClient(message, args, client) {
 		var heuristik = 0;
 
+
 		const TEXT_CHANNEL = message.channel;
 
 		//client cant see text channel
