@@ -1,16 +1,8 @@
 const Discord = require('discord.js');
-const scsearch = require('soundcloud-searcher');
-var scopts = {
-	limit: 5,
-	name: 'witcher3'
-};
-scsearch.init(process.env.SOUNDCLOUD_CLIENT_ID)
+const scSearch = require('sc-searcher');
 const scdl = require('soundcloud-downloader');
-const ytsearch = require('youtube-search');
-const ytopts = {
-    maxResults: 5,
-    key: process.env.YOUTUBE_API_KEY
-};
+const ytSearch = require('youtube-search');
+ytSearch.init(process.env.SOUNDCLOUD_CLIENT_ID);
 const ytdl = require('ytdl-core');
 
 module.exports = {

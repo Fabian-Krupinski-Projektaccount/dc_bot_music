@@ -1,10 +1,17 @@
 const request = require('request');
 
-exports.getTracks = function (client_id, search, limit, callback) {
+var client_id;
+
+exports.init = (clientId) => {
+    if(!clientId) return;
+    client_id = clientId;
+}
+
+exports.getTracks = (search, limit, callback) => {
     if(typeof search != 'string') throw 'Seach term is not type of string';
     if(isNaN(limit)) throw 'Not a number';
     if(limit > 100 || limit < 1) throw 'Limit must be between 1 and 100';
-    if(!client_id) throw 'Must have a client id';
+    if(!client_id) throw 'Must set client id with init() first';
 
     var searchURL = 'https://api-v2.soundcloud.com/search/tracks?q=SEARCH_TERM&client_id=CLIENT_ID_TERM&limit=LIMIT_TERM';;
 
