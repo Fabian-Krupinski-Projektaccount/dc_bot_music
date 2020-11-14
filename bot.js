@@ -169,7 +169,7 @@ function runCommand(guild_id, command_object) {
 
             let heuristik_id = heuristik_list.length;
             //get message to command_object.message_id
-            let message = client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id);
+            var message = client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id);
 
 
             //get heuristik for client
