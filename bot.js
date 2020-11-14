@@ -174,10 +174,10 @@ function runCommand(guild_id, command_object) {
                 //console.log(client.user.username + ': ' + highestHeuristik + ' < ' + heuristik_list[id]);
                 highestHeuristik = heuristik_list[id];
                 highestHeuristikClient = client;
-                console.log(highestHeuristikClient.user.username);
             }
         }
 
+        console.log(highestHeuristikClient.user.username);
         highestHeuristikClient.commands.get(command_object.command_name).execute(message, command_object.args, highestHeuristikClient);
     }, 200);
 }
