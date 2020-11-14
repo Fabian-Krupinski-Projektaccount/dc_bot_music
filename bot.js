@@ -148,7 +148,6 @@ client_list.forEach(client => {
 });
 
 function runCommand(guild_id, command_object) {
-    //var command_object = database.getCommandQueue(guild_id).shift();
     var command_index = database.getCommandIndex(guild_id, command_object.message_id);
 
     setTimeout(async function() {
