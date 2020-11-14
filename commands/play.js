@@ -7,6 +7,7 @@ module.exports = {
 	aliases: ["p"],
 	description: "Starts playing or enqueues a song",
 	getHeuristikForClient(message, args, client) {
+		//If no guild_list exists create one
 		if (!client.guild_list[message.guild.id]) {
             client.guild_list[message.guild.id] = {
                 voiceChannel: null,
@@ -18,7 +19,7 @@ module.exports = {
             };
         }
 
-		//Set voiceChannel in guild_list to null when client is in no voice.channel
+		//Set voiceChannel in guild_list.voiceChannel to null when client is in no voice.channel
 		if (client.guild_list[message.guild.id].voiceChannel != null) {		//Only run when voiceChannel isnt already null
 			let client_voice = client.guilds.cache.get(message.guild.id).members.cache.get(client.user.id).guild.voice;
 			if (!client_voice || !client_voice.channel) {
