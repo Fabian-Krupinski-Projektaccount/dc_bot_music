@@ -19,9 +19,12 @@ module.exports = {
         }
 
 		//Set voiceChannel in guild_list to null when client is in no voice.channel
-		/*if (!message.guild.voice || !message.guild.voice.channel) {
-			client.guild_list[message.guild.id].voiceChannel = null;
-		}*/
+		if (client.guild_list[message.guild.id].voiceChannel != null) {		//Only run when voiceChannel isnt already null
+			let client_voice = client.guilds.cache.get(message.guild.id).members.cache.get(client.user.id).guild.voice;
+			if (!client_voice || !client_voice.channel) {
+				client.guild_list[message.guild.id].voiceChannel = null;
+			}
+		}
 
 		var heuristik = 0;
 
@@ -63,20 +66,18 @@ module.exports = {
 		//in no voice channel
 		if (client.guild_list[message.guild.id].voiceChannel == null) heuristik += 50000;
 
-		//console.log(message.member.voice.channel.id);
-		console.log(heuristik);
 		return heuristik;
 	},
 	async execute(message, args, client) {
 		//channels
 		const text_channel = message.channel;
-		const voice_channel = message.member.voice.channel;
+		const voice_channel = client.channels.cache.get(message.member.voice.channel.id);
 
 		//requirements
 		if(!voice_channel) return message.reply(" You need to join a voice channel first!");
 
 		const text_permissions = text_channel.permissionsFor(message.client.user);
-		const voice_permissions = voice_channel.permissionsFor(message.client.user);
+		const voice_permissions = message.member.voice.channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
 		if (!text_permissions.has("SEND_MESSAGES") && !is_admin) return message.author.send("I don't have permission to send messages in this channel!");
@@ -86,7 +87,6 @@ module.exports = {
 
 
         if (client.guild_list[message.guild.id].voiceChannel == null) {
-			console.log(voice_channel);
             voice_channel.join()
 				.then(connection => {
 					client.guild_list[message.guild.id].voiceChannel = connection.channel;

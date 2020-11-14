@@ -158,7 +158,6 @@ function runCommand(guild_id, command_object) {
         var message;
 
         for (const client_id of db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) {
-            console.log("1");
             for (let _client of client_list) {
                 if (_client.user.id == client_id) {
                     var client = _client;
@@ -172,15 +171,13 @@ function runCommand(guild_id, command_object) {
             heuristik_list[id] = client.commands.get(command_object.command_name).getHeuristikForClientToRunCommand(message, command_object.args, client);
 
             if (highestHeuristik < heuristik_list[id] || !heuristik_list[id-1]) {
-                console.log(client.user.username + ': ' + highestHeuristik + ' < ' + heuristik_list[id]);
+                //console.log(client.user.username + ': ' + highestHeuristik + ' < ' + heuristik_list[id]);
                 highestHeuristik = heuristik_list[id];
                 highestHeuristikClient = client;
                 console.log(highestHeuristikClient.user.username);
             }
         }
 
-        console.log("2");
-        console.log(highestHeuristikClient.user.username);
         highestHeuristikClient.commands.get(command_object.command_name).execute(message, command_object.args, highestHeuristikClient);
     }, 200);
 }
