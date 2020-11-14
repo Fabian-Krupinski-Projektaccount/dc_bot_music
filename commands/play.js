@@ -20,7 +20,7 @@ module.exports = {
         }
 
 		//Set voiceChannel in guild_list.voiceChannel to null when client is in no voice.channel
-		if (client.guild_list[message.guild.id].voiceChannel != null) {		//Only run when voiceChannel isnt already null
+		if (client.guild_list[message.guild.id].voiceChannel != null) {		//Only run when voiceChannel isn't already null
 			let client_voice = client.guilds.cache.get(message.guild.id).members.cache.get(client.user.id).guild.voice;
 			if (!client_voice || !client_voice.channel) {
 				client.guild_list[message.guild.id].voiceChannel = null;
