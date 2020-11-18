@@ -201,19 +201,3 @@ function runCommand(guild_id, command_object) {
         highestHeuristikClient.commands.get(command_object.command_name).execute(message, command_object.args, highestHeuristikClient);
     }, 200);
 }
-
-
-
-
-/*var search = require('youtube-search');
-
-var opts = {
-    maxResults: 5,
-    key: process.env.YOUTUBE_API_KEY
-};
-
-search('music', opts, function(err, results) {
-  if(err) return console.log(err);
-
-  console.dir(results);
-});*/
