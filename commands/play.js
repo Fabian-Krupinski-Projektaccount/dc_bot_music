@@ -17,7 +17,6 @@ module.exports = {
 		if (!client.guild_list[message.guild.id]) {
             client.guild_list[message.guild.id] = {
                 connection: null,
-                voiceChannel: null,
                 volume: 5,
                 queue: [],
                 isPlaying: false
@@ -25,10 +24,10 @@ module.exports = {
         }
 
 		//Set voiceChannel in guild_list.voiceChannel to null when client is in no voice.channel
-		if (client.guild_list[message.guild.id].voiceChannel != null) {		//Only run when voiceChannel isn't already null
+		if (client.guild_list[message.guild.id].connection != null) {		//Only run when connection isn't already null
 			let client_voice = client.guilds.cache.get(message.guild.id).members.cache.get(client.user.id).guild.voice;
 			if (!client_voice || !client_voice.channel) {
-				client.guild_list[message.guild.id].voiceChannel = null;
+				client.guild_list[message.guild.id].connection.channel = null;
 			}
 		}
 
@@ -56,21 +55,21 @@ module.exports = {
 
 		/*console.log("------read voiceChannel------");
 		console.log(client.user.username);
-		if (!client.guild_list[message.guild.id].voiceChannel) {
+		if (!client.guild_list[message.guild.id].connection.channel) {
 			console.log(client.guild_list[message.guild.id]);
 		} else {
-			console.log(client.guild_list[message.guild.id].voiceChannel.id);
+			console.log(client.guild_list[message.guild.id].connection.channel.id);
 		}
 		console.log("------------");*/
 
 		//already in another voice channel
-		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel.id != VOICE_CHANNEL.id) return -1;
+		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id != VOICE_CHANNEL.id) return -1;
 
 		//already in same voice channel
-		if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel.id == VOICE_CHANNEL.id) heuristik += 100000;
+		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id == VOICE_CHANNEL.id) heuristik += 100000;
 
 		//in no voice channel
-		if (client.guild_list[message.guild.id].voiceChannel == null) heuristik += 50000;
+		if (client.guild_list[message.guild.id].connection == null) heuristik += 50000;
 
 		return heuristik;
 	},
@@ -89,23 +88,51 @@ module.exports = {
 		if (!text_permissions.has("SEND_MESSAGES") && !is_admin) return message.author.send("I don't have permission to send messages in this channel!");
 		if ((!voice_permissions.has("CONNECT") || !voice_permissions.has("SPEAK")) && (!is_admin)) return message.reply(" I don't have permission to connect or speak in your voice channel!");
 
-        if (client.guild_list[message.guild.id].voiceChannel != null && client.guild_list[message.guild.id].voiceChannel != VOICE_CHANNEL) return message.reply(" all clients are already in voice channels!");
+        if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel != VOICE_CHANNEL) return message.reply(" all clients are already in voice channels!");
+
+        if (!args[0]) return message.reply(" parameter for query missing!");
 
 
-        if (client.guild_list[message.guild.id].voiceChannel == null) {
+        if (client.guild_list[message.guild.id].connection == null) {
             VOICE_CHANNEL.join()
 				.then(connection => {
                     client.guild_list[message.guild.id].connection = connection;
-					client.guild_list[message.guild.id].voiceChannel = connection.channel;
 					/*console.log("------set voiceChannel------");
 					console.log(client.user.username);
-					console.log(client.guild_list[message.guild.id].voiceChannel.id);
+					console.log(client.guild_list[message.guild.id].connection.channel.id);
 					console.log("------------");*/
 					connection.voice.setSelfDeaf(true);
-
-                    client.guild_list[message.guild.id].queue.push('https://www.youtube.com/watch?v=rklImmR-lko');
-                    play(message.guild.id, client);
 				});
+        }
+
+
+        if (args[0].includes('youtube.com/') || args[0].includes('youtu.be/')) {
+            console.log('Yt');
+            if (args[0].includes('/playlist')) {
+                console.log('Playlist');
+            } else if (args[0].includes('/watch')) {
+                console.log('Video');
+            }
+        } else if (args[0].includes('soundcloud.com/')) {
+            console.log('Sc');
+            if (args[0].includes('/sets/')) {
+                console.log('Playlist');
+            } else {
+                console.log('Video');
+            }
+        } else {
+            //search
+        }
+
+
+
+
+
+        if (client.guild_list[message.guild.id].connection != null) {
+            let connection = client.guild_list[message.guild.id].connection;
+
+            client.guild_list[message.guild.id].queue.push('https://www.youtube.com/watch?v=rklImmR-lko');
+            play(message.guild.id, client);
         }
 
 
@@ -121,6 +148,9 @@ function play(guild_id, client) {
         });
 }
 
+
+
+
 function getSoundcloudStream(url) {
     if(!process.env.SOUNDCLOUD_CLIENT_ID) return console.log('No sc client Id getSoundcloudStream() at play.js');
     scdl.download(url, process.env.SOUNDCLOUD_CLIENT_ID)
@@ -131,4 +161,8 @@ function getSoundcloudStream(url) {
 
 function getYoutubeStream(url) {
     return ytdl(url);
+}
+
+function getSpotifyStream(url) {
+    //soon
 }
