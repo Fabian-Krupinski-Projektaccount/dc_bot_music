@@ -29,6 +29,10 @@ const bot_token_list = [
 ];
 var CLIENT_LIST = [];
 
+
+/*
+----------------------INIT CLIENTS----------------------
+*/
 bot_token_list.forEach(token => {
     const client_id = CLIENT_LIST.length;     //first run =0
 
@@ -43,10 +47,9 @@ bot_token_list.forEach(token => {
 });
 
 
-
-/**
- * Client Events
- */
+/*
+----------------------CLIENT EVENTS----------------------
+*/
 CLIENT_LIST.forEach(client => {
     client.on('ready', () => {
         const user_id = client.user.id;
@@ -72,9 +75,10 @@ CLIENT_LIST.forEach(client => {
     });
 });
 
-/**
- * Import all commands
- */
+
+/*
+----------------------IMPORT COMMANDS----------------------
+*/
 const commandFiles = fs.readdirSync(path.join(__dirname, 'commands'))
 	.filter((file) => file.endsWith('.js'));
 
