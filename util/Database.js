@@ -1,6 +1,32 @@
 const db = require('quick.db');
 
 class Database {
+    setup(dev) {
+        if (!db.get('guilds')) {
+            db.set('guilds', {});
+        }
+        if (dev) {
+            db.delete('guilds');
+        }
+    }
+
+    /*
+    ----------------------GUILDS----------------------
+    */
+    guildExists(guild_id) {
+        if (db.get(`guilds.${guild_id}`)) return true;
+        return false;
+    }
+
+    createGuild(guild_id) {
+        if (this.guildExists(guild_id)) return db.get(`guilds.${guild_id}`);
+
+        return db.set(`guilds.${guild_id}`, {
+            guild_id: guild_id,
+            command_queue: [],
+        });
+    }
+
     //Commands
     getCommandQueue(guild_id) {
         if (db.get(`guilds.${guild_id}.command_queue`)) {

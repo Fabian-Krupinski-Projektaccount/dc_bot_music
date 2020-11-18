@@ -4,6 +4,7 @@ const dev = true;
 //Modules
 const Database = require('./util/Database');
 const database = new Database();
+database.setup(dev);
 
 require('dotenv').config()
 const Discord = require('discord.js');
@@ -11,13 +12,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const consola = require('consola')
 const db = require('quick.db');
-if(!db.get('guilds')) {
-    db.set('guilds', {});
-}
 
-if (dev) {
-    db.delete('guilds');
-}
 
 
 
@@ -33,19 +28,19 @@ const bot_token_list = [
     process.env.DISCORD_BOT_TOKEN2,
     process.env.DISCORD_BOT_TOKEN3
 ];
-var client_list = [];
+var CLIENT_LIST = [];
 
 bot_token_list.forEach(token => {
-    const client_id = client_list.length;     //first run =0
+    const client_id = CLIENT_LIST.length;     //first run =0
 
-    client_list[client_id] = new Discord.Client()
+    CLIENT_LIST[client_id] = new Discord.Client()
 
-    client_list[client_id].login(token);
-    client_list[client_id].commands = new Discord.Collection();
-    client_list[client_id].prefix = conf.prefix;
-    client_list[client_id].name = conf.name;
+    CLIENT_LIST[client_id].login(token);
+    CLIENT_LIST[client_id].commands = new Discord.Collection();
+    CLIENT_LIST[client_id].prefix = conf.prefix;
+    CLIENT_LIST[client_id].name = conf.name;
 
-    client_list[client_id].guild_list = {};
+    CLIENT_LIST[client_id].guild_list = {};
 });
 
 
@@ -53,7 +48,7 @@ bot_token_list.forEach(token => {
 /**
  * Client Events
  */
-client_list.forEach(client => {
+CLIENT_LIST.forEach(client => {
     client.on('ready', () => {
         const user_id = client.user.id;
 
@@ -86,7 +81,7 @@ const commandFiles = fs.readdirSync(path.join(__dirname, 'commands'))
 
 for (const file of commandFiles) {
 	const command = require(path.join(__dirname, 'commands', `${file}`));
-    client_list.forEach(client => {
+    CLIENT_LIST.forEach(client => {
 	       client.commands.set(command.name, command);
     });
 	consola.success(`Command >>\x1b[4m${command.name}\x1b[0m<< loaded!`);
@@ -97,15 +92,21 @@ for (const file of commandFiles) {
 
 
 
-client_list.forEach(client => {
+CLIENT_LIST.forEach(client => {
     client.on('message', async message => {
-        if(!db.get(`guilds.${message.guild.id}`)) {
-            db.set(`guilds.${message.guild.id}`, {
-                guild_id: message.guild.id,
-                command_queue: [],
-            });
-        }
+        /*
+        ----------------------VARIABLES----------------------
+        */
+        const guild_id = message.guild.id;
+        const message_id = message.id;
+        const client_id = client.user.id;
+        const channel_id = message.channel.id;
 
+
+        /*
+        ----------------------CHECK IF MESSAGE IS VALID COMMAND----------------------
+        */
+        if (!database.guildExists(guild_id)) database.createGuild(guild_id);
 
     	if (message.author.bot) return;
     	if (!message.content.startsWith(client.prefix)) return;
@@ -120,57 +121,74 @@ client_list.forEach(client => {
     	if (!command) return;
 
 
+        /*
+        ----------------------RUN----------------------
+        */
         var command_object = {
-            channel_id: message.channel.id,
-            message_id: message.id,
+            channel_id: channel_id,
+            message_id: message_id,
             args: args,
             command_name: command.name,
             client_ids: []
         };
 
-        if (database.getCommandIndex(message.guild.id, command_object.message_id) == -1) {
-            database.pushCommand(message.guild.id, command_object);
-            runCommand(message.guild.id, command_object);
+        if (database.getCommandIndex(guild_id, message_id) == -1) {
+            database.pushCommand(guild_id, command_object);
+            runCommand(guild_id, command_object);
         }
 
-        const command_index = database.getCommandIndex(message.guild.id, command_object.message_id);
-        command_object = database.getCommandObject(message.guild.id, message.guild.id); //db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
+        const command_index = database.getCommandIndex(guild_id, message_id);
+        command_object = database.getCommandObject(guild_id, message_id); //db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
 
-        if (database.isClientIdInList(message.guild.id, command_index, client.user.id) == false) {
-            database.pushClientId(message.guild.id, command_index, client.user.id);
+        if (database.isClientIdInList(guild_id, command_index, client_id) == false) {
+            database.pushClientId(guild_id, command_index, client_id);
         }
     });
 });
 
 function runCommand(guild_id, command_object) {
-    var command_object = command_object;
+    /*
+    ----------------------VARIABLES----------------------
+    */
+    const guild_id = guild_id;
+    const command_object = command_object;
     const command_index = database.getCommandIndex(guild_id, command_object.message_id);
 
+
+    /*
+    ----------------------SUB FUNCTION----------------------
+    */
     setTimeout(async function() {
+        /*
+        ----------------------VARIABLES----------------------
+        */
         var heuristik_list = [];
         var highestHeuristik = -99999;
         var highestHeuristikClient;
+        var message = null;
 
-        var message;
 
+        /*
+        ----------------------RUN----------------------
+        */
         for (const client_id of db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) {
+            let heuristik_id = heuristik_list.length;
+            let client = null;
 
-            //Get client to client_id
-            for (const _client of client_list) {
+            //Get client matching client_id
+            for (const _client of CLIENT_LIST) {
                 if (_client.user.id == client_id) {
-                    var client = _client;
-                    break;
+                    client = _client;
+                    break;  //break for loop when client is found
                 }
             }
 
-
-            const heuristik_id = heuristik_list.length;
-            //get message to command_object.message_id
+            //get message matching message_id
             message = client.channels.cache.get(command_object.channel_id).messages.cache.get(command_object.message_id);
-
 
             //get heuristik for client
             heuristik_list[heuristik_id] = client.commands.get(command_object.command_name).getHeuristikForClient(message, command_object.args, client);
+
 
             //if heuristik for client than old highestHeuristik make heuristik new highestHeuristik
             if (highestHeuristik < heuristik_list[heuristik_id] || !heuristik_list[heuristik_id-1]) {
