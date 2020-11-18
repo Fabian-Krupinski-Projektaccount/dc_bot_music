@@ -6,7 +6,7 @@ const scSearch = require('sc-searcher');
 scSearch.init(process.env.SOUNDCLOUD_CLIENT_ID);
 const scdl = require('soundcloud-downloader');
 
-const YTSearcher = require('ytsearcher');
+const {YTSearcher} = require('ytsearcher');
 const ytSearch = new YTSearcher(process.env.YOUTUBE_API_KEY);
 const ytdl = require('ytdl-core');
 
@@ -154,7 +154,7 @@ module.exports = {
                 console.log('Song');
             }
 		}
-		
+
 
 		/*
         ----------------------SEARCH----------------------
