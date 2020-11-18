@@ -9,7 +9,6 @@ require('dotenv').config()
 const Discord = require('discord.js');
 const fs = require('fs-extra');
 const path = require('path');
-const setTitle = require('console-title');
 const consola = require('consola')
 const db = require('quick.db');
 if(!db.get('guilds')) {
@@ -26,8 +25,6 @@ var conf = {
     "prefix": "m!",
     "name": "Music Bot"
 }
-setTitle(`${conf.name} [${conf.prefix}]`);
-
 
 
 const bot_token_list = [
@@ -142,8 +139,6 @@ client_list.forEach(client => {
         if (database.isClientIdInList(message.guild.id, command_index, client.user.id) == false) {
             database.pushClientId(message.guild.id, command_index, client.user.id);
         }
-
-        //console.log(database.getCommandQueue(message.guild.id));
     });
 });
 
