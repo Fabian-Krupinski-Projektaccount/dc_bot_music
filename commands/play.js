@@ -46,27 +46,17 @@ module.exports = {
 		//client cant see text or voice channel
 		if(!TEXT_CHANNEL || !VOICE_CHANNEL) return -1;
 
-		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
+        /*
+        ----------------------Permissions----------------------
+        */
+        const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
 		const voice_permissions = VOICE_CHANNEL.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
+        
+		if (!text_permissions.has('SEND_MESSAGES') && !voice_permissions.has('CONNECT') || !voice_permissions.has('SPEAK') && !is_admin) return -1;       //client hasn't all needed permissions
+		if (text_permissions.has('SEND_MESSAGES') && voice_permissions.has('CONNECT') && voice_permissions.has('SPEAK') && !is_admin) heuristik += 2;     //client has all needed permissions
+		if (is_admin) heuristik += 1;                                                                                                                     //client is admin
 
-		//client hasn't all needed permissions
-		if (!text_permissions.has('SEND_MESSAGES') && !voice_permissions.has('CONNECT') || !voice_permissions.has('SPEAK') && !is_admin) return -1;
-
-		//client has all needed permissions
-		if (text_permissions.has('SEND_MESSAGES') && voice_permissions.has('CONNECT') && voice_permissions.has('SPEAK') && !is_admin) heuristik += 2;
-
-		//client is admin
-		if (is_admin) heuristik += 1;
-
-		/*console.log('------read voiceChannel------');
-		console.log(client.user.username);
-		if (!client.guild_list[message.guild.id].connection.channel) {
-			console.log(client.guild_list[message.guild.id]);
-		} else {
-			console.log(client.guild_list[message.guild.id].connection.channel.id);
-		}
-		console.log('------------');*/
 
 		//already in another voice channel
 		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id != VOICE_CHANNEL.id) return -1;
@@ -76,6 +66,7 @@ module.exports = {
 
 		//in no voice channel
 		if (client.guild_list[message.guild.id].connection == null) heuristik += 50000;
+
 
 		return heuristik;
 	},

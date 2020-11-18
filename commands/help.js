@@ -14,17 +14,16 @@ module.exports = {
 		//client cant see text channel
 		if(!TEXT_CHANNEL) return -1;
 
+		/*
+        ----------------------Permissions----------------------
+        */
 		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
+		
+		if (!text_permissions.has('SEND_MESSAGES') && !is_admin) return -1;		//client hasn't all needed permissions
+		if (text_permissions.has('SEND_MESSAGES') && !is_admin) heuristik += 2;	//client has all needed permissions
+		if (is_admin) heuristik += 1;											//client is admin
 
-		//client hasn't all needed permissions
-		if (!text_permissions.has('SEND_MESSAGES') && !is_admin) return -1;
-
-		//client has all needed permissions
-		if (text_permissions.has('SEND_MESSAGES') && !is_admin) heuristik += 2;
-
-		//client is admin
-		if (is_admin) heuristik += 1;
 
 		return heuristik;
 	},
