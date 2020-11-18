@@ -137,7 +137,7 @@ client_list.forEach(client => {
         }
 
         const command_index = database.getCommandIndex(message.guild.id, message.id);
-        command_object = db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
+        command_object = database.getCommandObject(message.guild.id, message.guild.id); //db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
 
         if (database.isClientIdInList(message.guild.id, command_index, client.user.id) == false) {
             database.pushClientId(message.guild.id, command_index, client.user.id);
