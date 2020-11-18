@@ -80,7 +80,7 @@ module.exports = {
         ----------------------Permissions----------------------
         */
 		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
-		const voice_permissions = VOICE_CHANNEL.permissionsFor(message.client.user);
+		const voice_permissions = message.member.voice.channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
 
 		if (!text_permissions.has('SEND_MESSAGES') && !is_admin) return message.author.send(`I don't have permission to send messages in this channel!`);
