@@ -73,14 +73,14 @@ module.exports = {
         ----------------------CHANNELS----------------------
         */
         if(!message.member.voice) return message.reply(' You need to join a voice channel first!');
-		const TEXT_CHANNEL = message.channel;
+		const TEXT_CHANNEL = message.channel.permissionsFor(message.client.user);
 		const VOICE_CHANNEL = client.channels.cache.get(message.member.voice.channel.id);
 
 
         /*
         ----------------------Permissions----------------------
         */
-		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
+		const text_permissions = message.channel.permissionsFor(message.client.user);
 		const voice_permissions = message.member.voice.channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
 

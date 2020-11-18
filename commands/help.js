@@ -33,13 +33,13 @@ module.exports = {
 		/*
         ----------------------CHANNELS----------------------
         */
-		const TEXT_CHANNEL = message.channel;
+		const TEXT_CHANNEL = client.channels.cache.get(message.channel.id);
 
 
 		/*
         ----------------------Permissions----------------------
         */
-		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
+		const text_permissions = message.channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
 
 		if (!text_permissions.has('SEND_MESSAGES') && !is_admin) return message.author.send(`I don't have permission to send messages in this channel!`);
