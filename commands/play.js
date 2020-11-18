@@ -18,11 +18,14 @@ module.exports = {
 	aliases: ["p"],
 	description: "Starts playing or enqueues a song",
 	getHeuristikForClient(message, args, client) {
+        var heuristik = 0;
+
+
 		//If no guild_list exists create one
 		if (!client.guild_list[message.guild.id]) {
             client.guild_list[message.guild.id] = {
                 connection: null,
-                volume: 5,
+                volume: 100,
                 queue: [],
                 isPlaying: false
             };
@@ -35,8 +38,6 @@ module.exports = {
 				client.guild_list[message.guild.id].connection.channel = null;
 			}
 		}
-
-		var heuristik = 0;
 
 		//channels
         if(!message.member.voice) return -1;
@@ -87,7 +88,7 @@ module.exports = {
 
 		//requirements
 		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
-		const voice_permissions = message.member.voice.channel.permissionsFor(message.client.user);
+		const voice_permissions = VOICE_CHANNEL.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
 
 		if (!text_permissions.has("SEND_MESSAGES") && !is_admin) return message.author.send("I don't have permission to send messages in this channel!");
@@ -174,5 +175,6 @@ async function play(guild_id, client) {
         .on("finish", () => {
             client.guild_list[guild_id].queue.shift();
             play(guild_id, client);
-        });
+        })
+        .setVolumeLogarithmic(client.guild_list[guild_id].volume / 100);
 }

@@ -7,6 +7,7 @@ module.exports = {
 	getHeuristikForClient(message, args, client) {
 		var heuristik = 0;
 
+
 		//channels
 		const TEXT_CHANNEL = message.channel;
 
@@ -30,6 +31,7 @@ module.exports = {
 	execute(message, args, client) {
 		//channels
 		const TEXT_CHANNEL = message.channel;
+
 		//requirements
 		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission("ADMINISTRATOR");
