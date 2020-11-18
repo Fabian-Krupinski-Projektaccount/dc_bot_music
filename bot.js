@@ -150,8 +150,8 @@ function runCommand(guild_id, command_object) {
     /*
     ----------------------VARIABLES----------------------
     */
-    const guild_id = guild_id;
-    const command_object = command_object;
+    var guild_id = guild_id;
+    var command_object = command_object;
     const command_index = database.getCommandIndex(guild_id, command_object.message_id);
 
 

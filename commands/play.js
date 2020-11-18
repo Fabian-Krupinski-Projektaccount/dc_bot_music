@@ -161,11 +161,11 @@ async function play(guild_id, client) {
 
     if (song.type == Song.type[0]) {
         stream = await ytdl(song.url);
-    } else if (song.type == Song.type[2]) {
+    } else if (song.type == Song.type[1]) {
         stream = await scdl.download(song.url, process.env.SOUNDCLOUD_CLIENT_ID);
     }
 
-    console.log(client.guild_list[guild_id]);
+    //console.log(stream);
 
     client.guild_list[guild_id].connection
         .play(stream)
