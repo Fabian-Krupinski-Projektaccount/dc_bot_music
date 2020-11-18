@@ -17,12 +17,11 @@ module.exports = {
 		//If no guild_list exists create one
 		if (!client.guild_list[message.guild.id]) {
             client.guild_list[message.guild.id] = {
+                connection: null,
                 voiceChannel: null,
                 volume: 5,
-                music: {
-                    queue: new Map(),
-                    isPlaying: false
-                }
+                queue: [],
+                isPlaying: false
             };
         }
 
@@ -97,22 +96,30 @@ module.exports = {
         if (client.guild_list[message.guild.id].voiceChannel == null) {
             VOICE_CHANNEL.join()
 				.then(connection => {
+                    client.guild_list[message.guild.id].connection = connection;
 					client.guild_list[message.guild.id].voiceChannel = connection.channel;
 					/*console.log("------set voiceChannel------");
 					console.log(client.user.username);
 					console.log(client.guild_list[message.guild.id].voiceChannel.id);
 					console.log("------------");*/
 					connection.voice.setSelfDeaf(true);
+
+                    client.guild_list[message.guild.id].queue.push('https://www.youtube.com/watch?v=rklImmR-lko');
+                    play(message.guild.id, client);
 				});
-            play(message.guild.id);
         }
 
 
 	}
 };
 
-function play(guild_id) {
-
+function play(guild_id, client) {
+    client.guild_list[guild_id].connection
+        .play(getYoutubeStream(client.guild_list[guild_id].queue[0]))
+        .on("finish", () => {
+            client.guild_list[guild_id].queue.shift();
+            play(guild_id, client);
+        });
 }
 
 function getSoundcloudStream(url) {
