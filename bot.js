@@ -131,12 +131,12 @@ client_list.forEach(client => {
             client_ids: []
         };
 
-        if (database.getCommandIndex(message.guild.id, message.id) == -1) {
+        if (database.getCommandIndex(message.guild.id, command_object.message_id) == -1) {
             database.pushCommand(message.guild.id, command_object);
             runCommand(message.guild.id, command_object);
         }
 
-        const command_index = database.getCommandIndex(message.guild.id, message.id);
+        const command_index = database.getCommandIndex(message.guild.id, command_object.message_id);
         command_object = database.getCommandObject(message.guild.id, message.guild.id); //db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
 
         if (database.isClientIdInList(message.guild.id, command_index, client.user.id) == false) {

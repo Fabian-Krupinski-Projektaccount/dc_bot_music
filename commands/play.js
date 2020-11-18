@@ -1,3 +1,5 @@
+const Song = require('../util/Song');
+
 const Discord = require('discord.js');
 
 const scSearch = require('sc-searcher');
@@ -34,6 +36,7 @@ module.exports = {
 		var heuristik = 0;
 
 		//channels
+        if(!message.member.voice) return -1;
 		const TEXT_CHANNEL = message.channel;
 		const VOICE_CHANNEL = client.channels.cache.get(message.member.voice.channel.id);
 
@@ -79,7 +82,7 @@ module.exports = {
 		const VOICE_CHANNEL = client.channels.cache.get(message.member.voice.channel.id);
 
 		//requirements
-		if(!message.member.voice || !message.member.voice.channel) return message.reply(" You need to join a voice channel first!");
+		if(!message.member.voice) return message.reply(" You need to join a voice channel first!");
 
 		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
 		const voice_permissions = message.member.voice.channel.permissionsFor(message.client.user);
@@ -94,32 +97,48 @@ module.exports = {
 
 
         if (client.guild_list[message.guild.id].connection == null) {
-            VOICE_CHANNEL.join()
-				.then(connection => {
-                    client.guild_list[message.guild.id].connection = connection;
-					/*console.log("------set voiceChannel------");
-					console.log(client.user.username);
-					console.log(client.guild_list[message.guild.id].connection.channel.id);
-					console.log("------------");*/
-					connection.voice.setSelfDeaf(true);
-				});
+            client.guild_list[message.guild.id].connection = await VOICE_CHANNEL.join();
+            /*console.log("------set voiceChannel------");
+            console.log(client.user.username);
+            console.log(client.guild_list[message.guild.id].connection.channel.id);
+            console.log("------------");*/
+            client.guild_list[message.guild.id].connection.voice.setSelfDeaf(true);
         }
 
+
+        var connection = client.guild_list[message.guild.id].connection;
+        var song_list = [];
 
         if (args[0].includes('youtube.com/') || args[0].includes('youtu.be/')) {
             console.log('Yt');
             if (args[0].includes('/playlist')) {
+
                 console.log('Playlist');
+
+
             } else if (args[0].includes('/watch')) {
+                song_list.push(new Song(args[0],Song.type[0]));
                 console.log('Video');
+
+
             }
+
+
         } else if (args[0].includes('soundcloud.com/')) {
             console.log('Sc');
             if (args[0].includes('/sets/')) {
+
                 console.log('Playlist');
+
+
             } else {
-                console.log('Video');
+                song_list.push(new Song(args[0],Song.type[1]));
+                console.log('Song');
+
+
             }
+
+
         } else {
             //search
         }
@@ -127,42 +146,31 @@ module.exports = {
 
 
 
-
-        if (client.guild_list[message.guild.id].connection != null) {
-            let connection = client.guild_list[message.guild.id].connection;
-
-            client.guild_list[message.guild.id].queue.push('https://www.youtube.com/watch?v=rklImmR-lko');
-            play(message.guild.id, client);
+        for (const song of song_list) {
+            client.guild_list[message.guild.id].queue.push(song);
         }
+        play(message.guild.id, client);
 
 
 	}
 };
 
-function play(guild_id, client) {
+async function play(guild_id, client) {
+    var stream = null;
+    var song = client.guild_list[guild_id].queue[0];
+
+    if (song.type == Song.type[0]) {
+        stream = await ytdl(song.url);
+    } else if (song.type == Song.type[2]) {
+        stream = await scdl.download(song.url, process.env.SOUNDCLOUD_CLIENT_ID);
+    }
+
+    console.log(client.guild_list[guild_id]);
+
     client.guild_list[guild_id].connection
-        .play(getYoutubeStream(client.guild_list[guild_id].queue[0]))
+        .play(stream)
         .on("finish", () => {
             client.guild_list[guild_id].queue.shift();
             play(guild_id, client);
         });
-}
-
-
-
-
-function getSoundcloudStream(url) {
-    if(!process.env.SOUNDCLOUD_CLIENT_ID) return console.log('No sc client Id getSoundcloudStream() at play.js');
-    scdl.download(url, process.env.SOUNDCLOUD_CLIENT_ID)
-        .then(stream => {
-            return stream;
-        });
-}
-
-function getYoutubeStream(url) {
-    return ytdl(url);
-}
-
-function getSpotifyStream(url) {
-    //soon
 }
