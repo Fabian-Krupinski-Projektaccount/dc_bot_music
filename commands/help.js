@@ -8,18 +8,20 @@ module.exports = {
 		var heuristik = 0;
 
 
-		//channels
+		/*
+        ----------------------CHANNELS----------------------
+        */
 		const TEXT_CHANNEL = message.channel;
 
-		//client cant see text channel
-		if(!TEXT_CHANNEL) return -1;
+		if(!TEXT_CHANNEL) return -1;		//client cant see text channel
+
 
 		/*
         ----------------------Permissions----------------------
         */
 		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
-		
+
 		if (!text_permissions.has('SEND_MESSAGES') && !is_admin) return -1;		//client hasn't all needed permissions
 		if (text_permissions.has('SEND_MESSAGES') && !is_admin) heuristik += 2;	//client has all needed permissions
 		if (is_admin) heuristik += 1;											//client is admin
@@ -28,14 +30,19 @@ module.exports = {
 		return heuristik;
 	},
 	execute(message, args, client) {
-		//channels
+		/*
+        ----------------------CHANNELS----------------------
+        */
 		const TEXT_CHANNEL = message.channel;
 
-		//requirements
+
+		/*
+        ----------------------Permissions----------------------
+        */
 		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
 
-		if (!text_permissions.has('SEND_MESSAGES') && !is_admin) return message.author.send('I don't have permission to send messages in this channel!');
+		if (!text_permissions.has('SEND_MESSAGES') && !is_admin) return message.author.send(`I don't have permission to send messages in this channel!`);
 
 
 		//execute

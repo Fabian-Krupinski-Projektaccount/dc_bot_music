@@ -38,13 +38,15 @@ module.exports = {
 			}
 		}
 
-		//channels
+        /*
+        ----------------------CHANNELS----------------------
+        */
         if(!message.member.voice) return -1;
 		const TEXT_CHANNEL = message.channel;
 		const VOICE_CHANNEL = client.channels.cache.get(message.member.voice.channel.id);
 
-		//client cant see text or voice channel
-		if(!TEXT_CHANNEL || !VOICE_CHANNEL) return -1;
+		if(!TEXT_CHANNEL || !VOICE_CHANNEL) return -1;        //client cant see text or voice channel
+
 
         /*
         ----------------------Permissions----------------------
@@ -52,37 +54,37 @@ module.exports = {
         const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
 		const voice_permissions = VOICE_CHANNEL.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
-        
+
 		if (!text_permissions.has('SEND_MESSAGES') && !voice_permissions.has('CONNECT') || !voice_permissions.has('SPEAK') && !is_admin) return -1;       //client hasn't all needed permissions
 		if (text_permissions.has('SEND_MESSAGES') && voice_permissions.has('CONNECT') && voice_permissions.has('SPEAK') && !is_admin) heuristik += 2;     //client has all needed permissions
 		if (is_admin) heuristik += 1;                                                                                                                     //client is admin
 
 
-		//already in another voice channel
-		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id != VOICE_CHANNEL.id) return -1;
-
-		//already in same voice channel
-		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id == VOICE_CHANNEL.id) heuristik += 100000;
-
-		//in no voice channel
-		if (client.guild_list[message.guild.id].connection == null) heuristik += 50000;
+		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id != VOICE_CHANNEL.id) return -1;           //already in another voice channel
+		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id == VOICE_CHANNEL.id) heuristik += 100000; //already in same voice channel
+		if (client.guild_list[message.guild.id].connection == null) heuristik += 50000;                                                                                   //in no voice channel
 
 
 		return heuristik;
 	},
 	async execute(message, args, client) {
-		//channels
+        /*
+        ----------------------CHANNELS----------------------
+        */
         if(!message.member.voice) return message.reply(' You need to join a voice channel first!');
 		const TEXT_CHANNEL = message.channel;
 		const VOICE_CHANNEL = client.channels.cache.get(message.member.voice.channel.id);
 
-		//requirements
+
+        /*
+        ----------------------Permissions----------------------
+        */
 		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
 		const voice_permissions = VOICE_CHANNEL.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
 
-		if (!text_permissions.has('SEND_MESSAGES') && !is_admin) return message.author.send('I don't have permission to send messages in this channel!');
-		if ((!voice_permissions.has('CONNECT') || !voice_permissions.has('SPEAK')) && (!is_admin)) return message.reply(' I don't have permission to connect or speak in your voice channel!');
+		if (!text_permissions.has('SEND_MESSAGES') && !is_admin) return message.author.send(`I don't have permission to send messages in this channel!`);
+		if ((!voice_permissions.has('CONNECT') || !voice_permissions.has('SPEAK')) && (!is_admin)) return message.reply(` I don't have permission to connect or speak in your voice channel!`);
 
         if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel != VOICE_CHANNEL) return message.reply(' all clients are already in voice channels!');
 
