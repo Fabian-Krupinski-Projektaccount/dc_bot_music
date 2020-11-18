@@ -63,14 +63,14 @@ class Database {
     /*
     ----------------------CLIENT IDS----------------------
     */
-    pushClientId(guild_id, command_index, client_id) {
-        db.push(`guilds.${guild_id}.command_queue[${command_index}].client_ids`, client_id);
-    }
-
     getClientIdList(guild_id, command_index) {
         if (!db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) return -1;
 
         return db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`);
+    }
+
+    pushClientId(guild_id, command_index, client_id) {
+        db.push(`guilds.${guild_id}.command_queue[${command_index}].client_ids`, client_id);
     }
 
     isClientIdInList(guild_id, command_index, client_id) {
