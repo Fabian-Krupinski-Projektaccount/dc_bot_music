@@ -104,37 +104,62 @@ module.exports = {
         var connection = client.guild_list[message.guild.id].connection;
         var song_list = [];
 
+		/*
+        ----------------------YOUTUBE----------------------
+        */
         if (args[0].includes('youtube.com/') || args[0].includes('youtu.be/')) {
-            console.log('Yt');
+			console.log('Yt');
+
+
+			/*
+	        ----------------------PLAYLIST----------------------
+	        */
             if (args[0].includes('/playlist')) {
 
                 console.log('Playlist');
+			}
 
 
-            } else if (args[0].includes('/watch')) {
+			/*
+	        ----------------------VIDEO----------------------
+	        */
+            else if (args[0].includes('/watch')) {
                 song_list.push(new Song(args[0],Song.type[0]));
                 console.log('Video');
-
-
             }
+		}
 
 
-        } else if (args[0].includes('soundcloud.com/')) {
+		/*
+        ----------------------SOUNDCLOUD----------------------
+        */
+        else if (args[0].includes('soundcloud.com/')) {
             console.log('Sc');
+
+
+			/*
+			----------------------PLAYLIST----------------------
+			*/
             if (args[0].includes('/sets/')) {
 
                 console.log('Playlist');
+			}
 
 
-            } else {
+			/*
+			----------------------SONG----------------------
+			*/
+            else {
                 song_list.push(new Song(args[0],Song.type[1]));
                 console.log('Song');
-
-
             }
+		}
+		
 
-
-        } else {
+		/*
+        ----------------------SEARCH----------------------
+        */
+        else {
             //search
         }
 
