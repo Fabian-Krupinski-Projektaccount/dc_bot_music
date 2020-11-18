@@ -10,6 +10,9 @@ const {YTSearcher} = require('ytsearcher');
 const ytSearch = new YTSearcher(process.env.YOUTUBE_API_KEY);
 const ytdl = require('ytdl-core');
 
+var SpotifyWebApi = require('spotify-web-api-node');
+var spotifyApi = new SpotifyWebApi();
+
 module.exports = {
 	name: "play",
 	aliases: ["p"],
