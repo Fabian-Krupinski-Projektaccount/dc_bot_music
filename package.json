@@ -21,6 +21,7 @@
     "sc-searcher": "^1.0.1",
     "soundcloud-downloader": "^0.1.8",
     "soundcloud-searcher": "^0.3.1",
+    "youtube-playlist": "^1.0.4",
     "ytdl-core": "^4.0.3",
     "ytsearcher": "^1.2.3"
   }

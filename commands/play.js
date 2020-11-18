@@ -9,6 +9,7 @@ const scdl = require('soundcloud-downloader');
 const {YTSearcher} = require('ytsearcher');
 const ytSearch = new YTSearcher(process.env.YOUTUBE_API_KEY);
 const ytdl = require('ytdl-core');
+const ytpl = require('youtube-playlist');
 
 
 
