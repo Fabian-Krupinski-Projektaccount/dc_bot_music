@@ -27,7 +27,10 @@ class Database {
         });
     }
 
-    //Commands
+
+    /*
+    ----------------------COMMANDS----------------------
+    */
     getCommandQueue(guild_id) {
         if (db.get(`guilds.${guild_id}.command_queue`)) {
             return db.get(`guilds.${guild_id}.command_queue`);
@@ -56,15 +59,22 @@ class Database {
         db.push(`guilds.${guild_id}.command_queue`, command_object);
     }
 
-    //ClientIds Bots
+
+    /*
+    ----------------------CLIENT IDS----------------------
+    */
     pushClientId(guild_id, command_index, client_id) {
         db.push(`guilds.${guild_id}.command_queue[${command_index}].client_ids`, client_id);
     }
 
+    getClientIdList(guild_id, command_index) {
+        if (!db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) return -1;
+
+        return db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`);
+    }
+
     isClientIdInList(guild_id, command_index, client_id) {
-        if (db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`).indexOf(client_id) == -1) {
-            return false;
-        }
+        if (db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`).indexOf(client_id) == -1) return false;
 
         return true;
     }

@@ -11,7 +11,6 @@ const Discord = require('discord.js');
 const fs = require('fs-extra');
 const path = require('path');
 const consola = require('consola')
-const db = require('quick.db');
 
 
 
@@ -138,7 +137,7 @@ CLIENT_LIST.forEach(client => {
         }
 
         const command_index = database.getCommandIndex(guild_id, message_id);
-        command_object = database.getCommandObject(guild_id, message_id); //db.get(`guilds.${message.guild.id}.command_queue[${command_index}]`);
+        command_object = database.getCommandObject(guild_id, message_id);
 
         if (database.isClientIdInList(guild_id, command_index, client_id) == false) {
             database.pushClientId(guild_id, command_index, client_id);
@@ -171,7 +170,7 @@ function runCommand(guild_id, command_object) {
         /*
         ----------------------RUN----------------------
         */
-        for (const client_id of db.get(`guilds.${guild_id}.command_queue[${command_index}].client_ids`)) {
+        for (const client_id of database.getClientIdList(guild_id, command_index)) {
             let heuristik_id = heuristik_list.length;
             let client = null;
 
