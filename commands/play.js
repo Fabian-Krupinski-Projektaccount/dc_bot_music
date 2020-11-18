@@ -104,6 +104,25 @@ module.exports = {
 					console.log("------------");*/
 					connection.voice.setSelfDeaf(true);
 				});
+            play(message.guild.id);
         }
+
+
 	}
 };
+
+function play(guild_id) {
+
+}
+
+function getSoundcloudStream(url) {
+    if(!process.env.SOUNDCLOUD_CLIENT_ID) return console.log('No sc client Id getSoundcloudStream() at play.js');
+    scdl.download(url, process.env.SOUNDCLOUD_CLIENT_ID)
+        .then(stream => {
+            return stream;
+        });
+}
+
+function getYoutubeStream(url) {
+    return ytdl(url);
+}
