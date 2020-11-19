@@ -151,7 +151,7 @@ module.exports = {
 			----------------------SONG----------------------
 			*/
             else {
-                song_list.push(new Song(args[0],Song.type[1]));
+                song_list.push(new Song(args[0], Song.type[1]));
                 console.log('Song');
             }
 		}
@@ -161,7 +161,19 @@ module.exports = {
         ----------------------SEARCH----------------------
         */
         else {
-            //search
+            //get search results
+			var scSearchResults = [];
+			scSearch.getTracks(args[0], 5, function callback(_track_list){
+			    for(var i = 0; i < _track_list.length; i++){
+					scSearchResults.push(_track_list[i]);
+			    }
+			});
+
+			var ytSearchResults = await ytsearcher.search(args[0], { type: 'video' })
+
+
+			//process search results
+			
         }
 
 
@@ -179,6 +191,8 @@ module.exports = {
 async function play(guild_id, client) {
     var stream = null;
     var song = client.guild_list[guild_id].queue[0];
+
+	if (!song) return;
 
     if (song.type == Song.type[0]) {
         stream = await ytdl(song.url);
