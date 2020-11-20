@@ -161,19 +161,24 @@ module.exports = {
         ----------------------SEARCH----------------------
         */
         else {
+			var resultsPerService = 5;
+
             //get search results
 			var scSearchResults = [];
-			scSearch.getTracks(args[0], 5, function callback(_track_list){
+			scSearch.asyncGetTracks(args[0], resultsPerService, async function callback(_track_list){
 			    for(var i = 0; i < _track_list.length; i++){
 					scSearchResults.push(_track_list[i]);
 			    }
 			});
 
-			var ytSearchResults = await ytsearcher.search(args[0], { type: 'video' })
-
+			var ytSearchResults = await ytSearch.search(args[0], { type: 'video' });
+			ytSearchResults = ytSearchResults.currentPage;
+			ytSearchResults.length = 4;
 
 			//process search results
-			
+			console.log(scSearchResults);
+			console.log('-------------------------------------------------------------');
+			console.log(ytSearchResults);
         }
 
 
