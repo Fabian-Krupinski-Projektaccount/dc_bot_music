@@ -2,7 +2,8 @@ const Song = require('../util/Song');
 
 const Discord = require('discord.js');
 
-const scSearch = require('sc-searcher');
+const ScSearcher = require('sc-searcher');
+const scSearch = new ScSearcher();
 scSearch.init(process.env.SOUNDCLOUD_CLIENT_ID);
 const scdl = require('soundcloud-downloader');
 
@@ -164,12 +165,10 @@ module.exports = {
 			var resultsPerService = 5;
 
             //get search results
-			var scSearchResults = [];
-			scSearch.asyncGetTracks(args[0], resultsPerService, async function callback(_track_list){
-			    for(var i = 0; i < _track_list.length; i++){
-					scSearchResults.push(_track_list[i]);
-			    }
-			});
+			var scSearchResults = await scSearch.getTracks(args[0], resultsPerService)
+				.then((res) => {
+					return res;
+				});
 
 			var ytSearchResults = await ytSearch.search(args[0], { type: 'video' });
 			ytSearchResults = ytSearchResults.currentPage;
