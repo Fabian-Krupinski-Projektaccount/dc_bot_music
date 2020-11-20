@@ -74,7 +74,7 @@ module.exports = {
         ----------------------CHANNELS----------------------
         */
         if(!message.member.voice) return message.reply(' You need to join a voice channel first!');
-		const TEXT_CHANNEL = message.channel.permissionsFor(message.client.user);
+		const TEXT_CHANNEL = client.channels.cache.get(message.channel.id);
 		const VOICE_CHANNEL = client.channels.cache.get(message.member.voice.channel.id);
 
 
@@ -178,6 +178,8 @@ module.exports = {
 			console.log(scSearchResults);
 			console.log('-------------------------------------------------------------');
 			console.log(ytSearchResults);
+
+
         }
 
 
