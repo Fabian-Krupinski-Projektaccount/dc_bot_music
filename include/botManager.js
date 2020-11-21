@@ -10,7 +10,7 @@ const fs = require('fs-extra');
 
 class BotManager {
     constructor() {
-        this.list = [];;
+        this.list = [];
         this.prefix = 'm!';
         this.name = 'Music Bot';
     }
@@ -72,7 +72,7 @@ class BotManager {
          */
         db.createGuild(command.guild_id);
         db.createCommand(command, client_id);
-        
+
         this.executeCommand(command);
     }
 

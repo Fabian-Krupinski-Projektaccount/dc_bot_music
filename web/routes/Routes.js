@@ -19,9 +19,9 @@ class Routes {
             }
 
 
-            //var text_channels = [];
-            //var voice_channels = [];
-            /*this.client.guilds.cache.first().channels.cache
+            /*var text_channels = [];
+            var voice_channels = [];
+            this.client.guilds.cache.first().channels.cache
                 .forEach(c => {
                     if(c.type == 'text') {
                         text_channels.push({id: c.id, name: c.name});
