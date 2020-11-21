@@ -4,14 +4,17 @@
 --}}
 <iframe style="display: none" name="dummyframe" id="dummyframe"></iframe>
 
-<form action="/sendMessage" method="POST" target="dummyframe" >
-    <input type="hidden" name="token" value="{{ token }}" />
+<script>
+    function returnUrlSearchParams(param, val) {
+        var url = new URL(location.href);
+        var params = new URLSearchParams(url.search);
+        params.set(param, val)
+        return params;
+    }
+</script>
 
-    <select name="channelid">
-        {{#each bot_list}}
-            <option value="{{this.user.id}}">{{this.user.username}}</option>
-        {{/each}}
-    </select>
-
-    <input type="submit" class="button" value="SEND">
-</form>
+<select name="channelid" onchange="location.search = returnUrlSearchParams('bot', this.value)">
+    {{#each bot_list}}
+        <option value="{{this.user.id}}">{{this.user.username}}</option>
+    {{/each}}
+</select>
