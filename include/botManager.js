@@ -71,9 +71,8 @@ class BotManager {
          * this.command_name = params.command_name;
          */
         db.createGuild(command.guild_id);
-
-
         db.createCommand(command, client_id);
+        
         this.executeCommand(command);
     }
 

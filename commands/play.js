@@ -19,9 +19,6 @@ module.exports = {
 	aliases: ['p'],
 	description: 'Starts playing or enqueues a song',
 	getHeuristikForClient(message, args, client) {
-        var heuristik = 0;
-
-
 		//If no guild_list exists create one
 		if (!client.guild_list[message.guild.id]) {
             client.guild_list[message.guild.id] = {
@@ -40,21 +37,21 @@ module.exports = {
 			}
 		}
 
+
+		
+        var heuristik = 0;
+
+
         /*
         ----------------------CHANNELS----------------------
         */
-        if(!message.member.voice) return -1;
-		const TEXT_CHANNEL = message.channel;
-		const VOICE_CHANNEL = client.channels.cache.get(message.member.voice.channel.id);
-
-		if(!TEXT_CHANNEL || !VOICE_CHANNEL) return -1;        //client cant see text or voice channel
-
+		if(!message.channel || !message.member.voice) return -1;        //client cant see text or voice channel
 
         /*
         ----------------------Permissions----------------------
         */
-        const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
-		const voice_permissions = VOICE_CHANNEL.permissionsFor(message.client.user);
+        const text_permissions = message.channel.permissionsFor(message.client.user);
+		const voice_permissions = message.member.voice.channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
 
 		if (!text_permissions.has('SEND_MESSAGES') && !voice_permissions.has('CONNECT') || !voice_permissions.has('SPEAK') && !is_admin) return -1;       //client hasn't all needed permissions
@@ -62,8 +59,8 @@ module.exports = {
 		if (is_admin) heuristik += 1;                                                                                                                     //client is admin
 
 
-		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id != VOICE_CHANNEL.id) return -1;           //already in another voice channel
-		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id == VOICE_CHANNEL.id) heuristik += 100000; //already in same voice channel
+		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id != message.channel.id) return -1;           //already in another voice channel
+		if (client.guild_list[message.guild.id].connection != null && client.guild_list[message.guild.id].connection.channel.id == message.member.voice.channel.id) heuristik += 100000; //already in same voice channel
 		if (client.guild_list[message.guild.id].connection == null) heuristik += 50000;                                                                                   //in no voice channel
 
 
