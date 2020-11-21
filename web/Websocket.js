@@ -1,7 +1,8 @@
 const Routes = require('./routes/Routes');
+const handlebarHelpers = require('./helpers/handlebars');
 
 const express = require('express');
-const hbs = require('express-handlebars');
+const exphbs = require('express-handlebars');
 const path = require('path');
 const bodyParser = require('body-parser');
 
@@ -14,14 +15,16 @@ class WebSocket {
         this.bot_list = bot_list;
         this.app = express();
 
-        this.app.engine('hbs', hbs({
+        var hbs = exphbs.create({
             extname: 'hbs',
             defaultLayout: 'layout',
             layoutsDir: __dirname + '/views/layouts',
-            partialsDir: __dirname + '/views/partials'      //{{> partialsNames }}
-        }));
-        this.app.set('views', path.join(__dirname, 'views'));
+            partialsDir: __dirname + '/views/partials',      //{{> partialsNames }}
+            helpers: handlebarHelpers
+        });
+        this.app.engine('hbs', hbs.engine);
         this.app.set('view engine', 'hbs');
+        this.app.set('views', path.join(__dirname, 'views'));
 
         this.app.use(express.static(path.join(__dirname, 'public')));
 

@@ -1,7 +1,7 @@
 class Routes {
-    constructor(app, token, client) {
+    constructor(app, token, bot_list) {
         this.token = token;
-        this.client = client;
+        this.bot_list = bot_list;
         this.app = app;
     }
 
@@ -19,8 +19,8 @@ class Routes {
             }
 
 
-            var text_channels = [];
-            var voice_channels = [];
+            //var text_channels = [];
+            //var voice_channels = [];
             /*this.client.guilds.cache.first().channels.cache
                 .forEach(c => {
                     if(c.type == 'text') {
@@ -29,12 +29,10 @@ class Routes {
                         voice_channels.push({id: c.id, name: c.name});
                     }
                 });*/
-
             res.render('index', {
                 title: "Web Interface",
                 token: _token,
-                text_channels,
-                voice_channels
+                bot_list: this.bot_list,
             });
         });
 

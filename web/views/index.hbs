@@ -8,11 +8,10 @@
     <input type="hidden" name="token" value="{{ token }}" />
 
     <select name="channelid">
-        {{#each text_channels}}
-            <option value="{{this.id}}">{{this.name}}</option>
+        {{#each bot_list}}
+            <option value="{{this.user.id}}">{{this.user.username}}</option>
         {{/each}}
     </select>
-    <input type="text" name="text" placeholder="TEXT">
 
     <input type="submit" class="button" value="SEND">
 </form>
