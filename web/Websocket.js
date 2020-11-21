@@ -3,9 +3,10 @@ const Routes = require('./routes/Routes');
 const express = require('express');
 const hbs = require('express-handlebars');
 const path = require('path');
+const bodyParser = require('body-parser');
 
 
-
+//http://localhost:33589/?token=3rFSfzbneu4qJgLK
 class WebSocket {
     constructor(token, port, bot_list) {
         this.token = token;

@@ -21,14 +21,14 @@ class Routes {
 
             var text_channels = [];
             var voice_channels = [];
-            this.client.guilds.cache.first().channels.cache
+            /*this.client.guilds.cache.first().channels.cache
                 .forEach(c => {
                     if(c.type == 'text') {
                         text_channels.push({id: c.id, name: c.name});
                     } else if(c.type == 'voice') {
                         voice_channels.push({id: c.id, name: c.name});
                     }
-                });
+                });*/
 
             res.render('index', {
                 title: "Web Interface",
