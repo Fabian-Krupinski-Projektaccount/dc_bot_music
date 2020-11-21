@@ -11,15 +11,12 @@ module.exports = {
 		/*
         ----------------------CHANNELS----------------------
         */
-		const TEXT_CHANNEL = message.channel;
-
-		if(!TEXT_CHANNEL) return -1;		//client cant see text channel
-
+		if(!message.channel) return -1;		//client cant see text channel
 
 		/*
         ----------------------Permissions----------------------
         */
-		const text_permissions = TEXT_CHANNEL.permissionsFor(message.client.user);
+		const text_permissions = message.channel.permissionsFor(message.client.user);
 		const is_admin = message.guild.me.hasPermission('ADMINISTRATOR');
 
 		if (!text_permissions.has('SEND_MESSAGES') && !is_admin) return -1;		//client hasn't all needed permissions
