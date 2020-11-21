@@ -13,6 +13,7 @@ module.exports = {
         */
 		if(!message.channel) return -1;		//client cant see text channel
 
+
 		/*
         ----------------------Permissions----------------------
         */
