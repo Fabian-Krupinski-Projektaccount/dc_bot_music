@@ -1,4 +1,4 @@
-const Song = require('../util/Song');
+const Song = require('../include/song');
 
 const Discord = require('discord.js');
 

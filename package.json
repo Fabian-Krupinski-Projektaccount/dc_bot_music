@@ -20,7 +20,7 @@
     "path": "^0.12.7",
     "quick.db": "^7.1.3",
     "request": "^2.88.2",
-    "sc-searcher": "^1.0.3",
+    "sc-searcher": "^1.0.5",
     "soundcloud-downloader": "^0.1.8",
     "youtube-playlist": "^1.0.4",
     "ytdl-core": "^4.0.3",
