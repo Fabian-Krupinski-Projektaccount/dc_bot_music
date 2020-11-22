@@ -18,6 +18,8 @@
 }
 
 #token_label {
+    font-size: 24px;
+    color: #fff;
     margin-bottom: 10px;
 }
 
@@ -35,6 +37,7 @@
 
 #token_submit {
     background-color: rgb(114, 137, 218);
+    color: #fff;
     border-width: 0px;
     border-radius: 3px;
     cursor: pointer;
