@@ -1,6 +1,17 @@
+@media (max-width: 830px) {
+    #login_form {
+        max-width: 480px;
+    }
+}
+
 #login_form {
-    border-radius: 25px;
-    width: 15%;
-    padding: 10px;
-    background-color: #2f3136;
+    background-color: #36393f;
+    color: #72767d;
+    border-radius: 5px;
+    width: 784px;
+    padding: 32px;
+    font-size: 18px;
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,.2);
+    box-sizing: border-box;
+    margin: 0px;
 }
