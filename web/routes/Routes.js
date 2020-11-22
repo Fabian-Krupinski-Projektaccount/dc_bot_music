@@ -1,3 +1,4 @@
+//http://localhost:33589/?token=3rFSfzbneu4qJgLK
 class Routes {
     constructor(app, token, bot_list) {
         this.token = token;

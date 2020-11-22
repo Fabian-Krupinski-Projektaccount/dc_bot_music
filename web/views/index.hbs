@@ -8,9 +8,9 @@
     <!--Correct Token-->
 {{else}}
     <form id="login_form" action="/" method="get">
-        <label for="token">Token:</label><br>
-        <input type="text" id="token" name="token" placeholder="token"><br>
+        <label for="token" id="token_label">Token:</label><br>
+        <input type="text" id="token" name="token"><br>
 
-        <input type="submit" value="Login">
+        <button type="submit" id="token_submit">Login</button>
     </form>
 {{/if}}
