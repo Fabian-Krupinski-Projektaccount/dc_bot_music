@@ -9,12 +9,30 @@ class Routes {
         return (_token == this.token);
     }
 
+    checkClientId(id_list) {
+        var id_list = id_list.split('_');
+        id_list.shift();
+
+        var valid_client_ids = [];
+        for (const client of this.bot_list) {
+            for (const id of id_list) {
+                if (client.user.id == id) valid_client_ids.push(id);
+            }
+        }
+
+        if (valid_client_ids.length > 0) {
+            return valid_client_ids;
+        } else {
+            return -1;
+        }
+    }
+
     register() {
         this.app.get('/', (req, res) => {
-            var _token = req.query.token;
+            const _token = req.query.token;
 
             if (!this.checkToken(_token)) {
-                res.render('error', { title: "ERROR" });
+                res.render('error', { title: 'ERROR'});
                 return;
             }
 
@@ -30,7 +48,24 @@ class Routes {
                     }
                 });*/
             res.render('index', {
-                title: "Web Interface",
+                title: 'Web Interface',
+                token: _token,
+                bot_list: this.bot_list,
+            });
+        });
+
+        this.app.get('/bot/:id', (req, res) => {
+            const _token = req.query.token;
+            const client_id_list = this.checkClientId(req.params.id);
+            console.log(client_id_list);
+
+            if (!this.checkToken(_token)) {
+                res.render('error', { title: 'ERROR'});
+                return;
+            }
+
+            res.render('bot', {
+                title: 'Web Interface',
                 token: _token,
                 bot_list: this.bot_list,
             });
