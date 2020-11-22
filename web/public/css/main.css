@@ -1,4 +1,7 @@
 body {
+    background: #202225;
     color: #b9bbbe;
-    background-color: #36393f;
+    text-rendering: optimizeLegibility;
+    font-family: Whitney,Helvetica Neue,Helvetica,Arial,sans-serif;
+    line-height: 1.5;
 }

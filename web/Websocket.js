@@ -17,7 +17,7 @@ class WebSocket {
 
         var hbs = exphbs.create({
             extname: 'hbs',
-            defaultLayout: 'layout',
+            defaultLayout: 'default',
             layoutsDir: __dirname + '/views/layouts',
             partialsDir: __dirname + '/views/partials',      //{{> partialsNames }}
             helpers: handlebarHelpers
