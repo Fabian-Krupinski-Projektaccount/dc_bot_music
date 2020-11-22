@@ -4,20 +4,13 @@
 --}}
 <iframe style="display: none" name="dummyframe" id="dummyframe"></iframe>
 
-<select id="bot_selection" class="botSelection">
-    <option value="">--Select Bot--</option>
-    <option value="/bot/{{allClients bot_list}}">All</option>
-    {{#each bot_list}}
-        <option value="/bot/_{{this.user.id}}">{{this.user.username}}</option>
-    {{/each}}
-</select>
+{{#if valid}}
+    <!--Correct Token-->
+{{else}}
+    <form id="login_form" action="/" method="get">
+        <label for="token">Token:</label><br>
+        <input type="text" id="token" name="token" placeholder="token"><br>
 
-
-
-<script>
-    var url = new URL(location.href);
-    var params = new URLSearchParams(url.search);
-    if (params.get('bot')) {
-        document.getElementById('bot_selection').value = params.get('bot');
-    }
-</script>
+        <input type="submit" value="Login">
+    </form>
+{{/if}}

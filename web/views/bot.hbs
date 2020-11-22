@@ -3,3 +3,21 @@
     to this to don't reload the page after request.
 --}}
 <iframe style="display: none" name="dummyframe" id="dummyframe"></iframe>
+
+<select id="bot_selection" class="botSelection">
+    <option value="">--Select Bot--</option>
+    <option value="/bot/{{allClients bot_list}}">All</option>
+    {{#each bot_list}}
+        <option value="/bot/_{{this.user.id}}">{{this.user.username}}</option>
+    {{/each}}
+</select>
+
+
+
+<script>
+    var url = new URL(location.href);
+    var params = new URLSearchParams(url.search);
+    if (params.get('bot')) {
+        document.getElementById('bot_selection').value = params.get('bot');
+    }
+</script>

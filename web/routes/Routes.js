@@ -29,32 +29,16 @@ class Routes {
 
     register() {
         this.app.get('/', (req, res) => {
-            const _token = req.query.token;
+            const _token = req.query.token || null;
 
-            if (!this.checkToken(_token)) {
-                res.render('error', { title: 'ERROR'});
-                return;
-            }
-
-
-            /*var text_channels = [];
-            var voice_channels = [];
-            this.client.guilds.cache.first().channels.cache
-                .forEach(c => {
-                    if(c.type == 'text') {
-                        text_channels.push({id: c.id, name: c.name});
-                    } else if(c.type == 'voice') {
-                        voice_channels.push({id: c.id, name: c.name});
-                    }
-                });*/
             res.render('index', {
                 title: 'Web Interface',
                 token: _token,
-                bot_list: this.bot_list,
+                valid: this.checkToken(_token)
             });
         });
 
-        this.app.get('/bot/:id', (req, res) => {
+        this.app.get('/:id', (req, res) => {
             const _token = req.query.token;
             const client_id_list = this.checkClientId(req.params.id);
             console.log(client_id_list);
