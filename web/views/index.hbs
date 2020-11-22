@@ -4,11 +4,11 @@
 --}}
 <iframe style="display: none" name="dummyframe" id="dummyframe"></iframe>
 
-<select id="bot_selection" name="channelid" onchange="location.search = returnUrlSearchParams('bot', this.value)">
+<select id="bot_selection" class="botSelection">
     <option value="">--Select Bot--</option>
     <option value="{{allClients bot_list}}">All</option>
     {{#each bot_list}}
-        <option value="{{this.user.id}}">{{this.user.username}}</option>
+        <option value="_{{this.user.id}}">{{this.user.username}}</option>
     {{/each}}
 </select>
 
@@ -17,12 +17,28 @@
 <script>
     var url = new URL(location.href);
     var params = new URLSearchParams(url.search);
-
     if (params.get('bot')) {
         document.getElementById('bot_selection').value = params.get('bot');
     }
 
-    function returnUrlSearchParams(param, val) {
+    window.onload = function() {
+        /*
+        if (!this.value) {
+            params.delete('bot');
+        } else {
+            params.set('bot', this.value);
+        }
+
+        location.search = params;
+        */
+        let onchangefunction = 'this.value?params.set("bot",this.value):params.delete("bot"),location.search=params;';
+
+        for(const object of document.getElementsByClassName('botSelection')) {
+            object.setAttribute('onchange', onchangefunction);
+        }
+    }
+
+    /*function returnUrlSearchParams(param, val) {
         var url = new URL(location.href);
         var params = new URLSearchParams(url.search);
 
@@ -33,5 +49,5 @@
 
         params.set(param, val);
         return params;
-    }
+    }*/
 </script>
