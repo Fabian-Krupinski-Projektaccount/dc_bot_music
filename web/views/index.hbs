@@ -1,11 +1,7 @@
-{{!--
-    Invisible dummy frame to redirect response answer
-    to this to don't reload the page after request.
---}}
-<iframe style="display: none" name="dummyframe" id="dummyframe"></iframe>
-
 {{#if valid}}
-    <!--Correct Token-->
+    <script>
+        window.location.pathname = '/bot/';
+    </script>
 {{else}}
     <form id="login_form" action="/" method="get">
         <label for="token" id="token_label">Login</label><br>
@@ -17,3 +13,14 @@
         <button type="submit" class="button-blue">Login</button>
     </form>
 {{/if}}
+
+<script>
+    const url = new URL(location.href);
+    const params = new URLSearchParams(url.search);
+
+    window.onload = function() {
+        for(const object of document.getElementsByClassName('botSelection')) {
+            object.setAttribute('onchange', 'window.location.pathname = this.value');
+        }
+    }
+</script>

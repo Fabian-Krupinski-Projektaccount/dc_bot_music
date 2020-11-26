@@ -32,23 +32,14 @@ class Routes {
         this.app.get('/', (req, res) => {
             const _token = req.query.token || null;
 
-            if (this.checkToken(_token)) {
-                res.render('index', {
-                    title: 'Web Interface',
-                    token: _token,
-                    valid: true,
-                    bot_list: this.bot_list
-                });
-            } else {
-                res.render('index', {
-                    title: 'Web Interface',
-                    token: _token,
-                    valid: false
-                });
-            }
+            res.render('index', {
+                title: 'Web Interface',
+                token: _token,
+                valid: this.checkToken(_token)
+            });
         });
 
-        this.app.get('/:id', (req, res) => {
+        this.app.get('/bot/:id', (req, res) => {
             const _token = req.query.token;
             const client_id_list = this.checkClientId(req.params.id);
             console.log(client_id_list);
