@@ -13,14 +13,3 @@
         <button type="submit" class="button-blue">Login</button>
     </form>
 {{/if}}
-
-<script>
-    const url = new URL(location.href);
-    const params = new URLSearchParams(url.search);
-
-    window.onload = function() {
-        for(const object of document.getElementsByClassName('botSelection')) {
-            object.setAttribute('onchange', 'window.location.pathname = this.value');
-        }
-    }
-</script>
