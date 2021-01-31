@@ -1,0 +1,4 @@
+Yellow: https://discord.com/api/oauth2/authorize?client_id=805397183154749441&permissions=0&scope=bot
+Green: https://discord.com/api/oauth2/authorize?client_id=805397103617638420&permissions=0&scope=bot
+Red: https://discord.com/api/oauth2/authorize?client_id=805397033200386048&permissions=0&scope=bot
+Blue: https://discord.com/api/oauth2/authorize?client_id=805396899716399124&permissions=0&scope=bot
