@@ -1,6 +1,5 @@
 require('dotenv').config()
 
-const Websocket = require('./web/Websocket');
 const Command = require('./include/command');
 const BotManager = require('./include/botManager');
 const bot_manager = new BotManager();
