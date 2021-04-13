@@ -1,26 +1,31 @@
+const Discord = require('discord.js');
+const consola = require('consola')
+const path = require('path');
+const fs = require('fs-extra');
+
+
 require('dotenv').config()
 
 const Command = require('./include/command');
-const BotManager = require('./include/botManager');
-const bot_manager = new BotManager();
+const BotPool = require('./include/botpool');
 
-const path = require('path');
-
+const botpool = new BotPool();
 
 
-bot_manager.init([
+
+botpool.init([
     process.env.DISCORD_BOT_TOKEN0,
     process.env.DISCORD_BOT_TOKEN1,
     process.env.DISCORD_BOT_TOKEN2,
     process.env.DISCORD_BOT_TOKEN3
 ]);
-bot_manager.loadCommands(path.join(__dirname, 'commands'));
+botpool.loadCommands(path.join(__dirname, 'commands'));
 
 /*
 ----------------------CLIENT EVENTS----------------------
 */
-bot_manager.list.forEach(client => {
-    client.on('ready', () => {
+botpool.bots.forEach(client => {
+    client.on('ready', async () => {
         consola.ready(`Bot >>${client.user.tag}<<`);
 
         client.leaveAllVoice();
@@ -75,6 +80,6 @@ bot_manager.list.forEach(client => {
             args: args,
             command_name: command.name
         });
-        bot_manager.transferCommand(command_object, client_id);
+        botpool.transferCommand(command_object, client_id);
     });
 });

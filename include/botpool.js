@@ -1,45 +1,45 @@
-const Database = require('./database');
-const db = new Database();
-
 const Discord = require('discord.js');
 const consola = require('consola')
 const path = require('path');
 const fs = require('fs-extra');
 
+const Database = require('./database');
+const db = new Database();
 
-
-class BotManager {
+class Botpool {
     constructor() {
-        this.list = [];
+        this.bots = [];
         this.prefix = 'm!';
         this.name = 'Music Bot';
     }
 
-    init(token_list) {
+    init(secrets) {
         var that = this;
 
-        for (const token of token_list) {
-            const client_id = this.list.length;
+        for (const secret of secrets) {
+            const client_id = this.bots.length;
 
-            this.list[client_id] = new Discord.Client()
+            this.bots[client_id] = new Discord.Client()
 
-            this.list[client_id].login(token);
-            this.list[client_id].commands = new Discord.Collection();
-            this.list[client_id].prefix = this.prefix;
-            this.list[client_id].name = this.name;
+            this.bots[client_id].login(secret);
+            this.bots[client_id].commands = new Discord.Collection();
+            this.bots[client_id].prefix = this.prefix;
+            this.bots[client_id].name = this.name;
 
-            this.list[client_id].guild_list = {};
+            this.bots[client_id].guild_list = {};
 
-            this.list[client_id].leaveAllVoice = function() {
-                const client = that.list[client_id];
+            this.bots[client_id].leaveAllVoice = function() {
+                const client = that.bots[client_id];
 
-                for (const guild of client.guilds.cache) {
-                    //guild[0] = guild_id
-                    //guild[1] = guild
-                    if (!guild[1].members.cache.get(client.user.id).guild.voice) continue;     //Client is in no voice channel in this guild
+                for (var guild of client.guilds.cache) {
+                    /*guild[0] = guild_id
+                      guild[1] = guild*/
+                    guild = guild[1];
 
-                    const voice_channel = guild[1].members.cache.get(client.user.id).guild.voice.channel;
-                    voice_channel.leave();  //After restart has to leave-join-leave to rly get out of channel dunno why
+                    //Leave all voice channels on start
+                    if (!guild.members.cache.get(client.user.id).guild.voice) continue;
+                    const voice_channel = guild.members.cache.get(client.user.id).guild.voice.channel;
+                    voice_channel.leave();
                     voice_channel.join();
                     voice_channel.leave();
                 }
@@ -55,7 +55,7 @@ class BotManager {
 
         for (const file of commandFiles) {
         	const command = require(path.join(dir, `${file}`));
-            this.list.forEach(bot => {
+            this.bots.forEach(bot => {
                 bot.commands.set(command.name, command);
             });
             consola.success(`Command >>\x1b[4m${command.name}\x1b[0m<< loaded!`);
@@ -125,4 +125,4 @@ class BotManager {
 }
 
 
-module.exports = BotManager;
+module.exports = Botpool;
