@@ -78,4 +78,3 @@ bot_manager.list.forEach(client => {
         bot_manager.transferCommand(command_object, client_id);
     });
 });
-new Websocket('3rFSfzbneu4qJgLK', '33589', bot_manager.list);
