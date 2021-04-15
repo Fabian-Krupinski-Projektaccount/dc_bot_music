@@ -64,14 +64,21 @@ class Botpool {
     }
 
     execute(command, client_id) {
-        /* Structure of command object
+        /* Structure of command
          * this.guild_id = params.guild_id
          * this.channel_id = params.channel_id;
          * this.message_id = params.message_id;
          * this.args = params.args;
          * this.command_name = params.command_name;
          */
-        db.createGuild(command.guild_id);
+
+        if (!db.get(`guilds.${command.guild_id}`)) {
+            db.set(`guilds.${command.guild_id}`, {
+                guild_id: command.guild_id,
+                command_queue: {},
+            });
+        }
+
         db.createCommand(command, client_id);
 
         this.executeCommand(command);
