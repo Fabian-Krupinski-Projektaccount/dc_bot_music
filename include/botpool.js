@@ -63,7 +63,7 @@ class Botpool {
         }
     }
 
-    execute(command, client_id) {
+    execute(command, bot_id) {
         /* Structure of command
          * this.guild_id = params.guild_id
          * this.channel_id = params.channel_id;
@@ -72,6 +72,7 @@ class Botpool {
          * this.command_name = params.command_name;
          */
 
+        //Check for guild in db
         if (!db.get(`guilds.${command.guild_id}`)) {
             db.set(`guilds.${command.guild_id}`, {
                 guild_id: command.guild_id,
@@ -79,7 +80,18 @@ class Botpool {
             });
         }
 
-        db.createCommand(command, client_id);
+        //Check if message is enqueued already
+        if (!db.get(`guilds.${command.guild_id}.command_queue[${command.message_id}]`)) {
+            db.set(`guilds.${command.guild_id}.command_queue[${command.message_id}]`, command);
+        }
+
+        //Run only when command is not executed already
+        if (db.get(`guilds.${command.guild_id}.command_queue[${command.message_id}].executed`) == false) {
+            //Add bot_id to list of bots that are able to see command
+            if (!db.get(`guilds.${command.guild_id}.command_queue[${command.message_id}].client_id_list[${bot_id}]`)) {
+                db.push(`guilds.${command.guild_id}.command_queue[${command.message_id}].client_id_list`, bot_id);
+            }
+        }
 
         this.executeCommand(command);
     }
