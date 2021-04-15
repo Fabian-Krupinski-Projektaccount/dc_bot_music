@@ -14,7 +14,7 @@ class Botpool {
     }
 
     init(secrets) {
-        var that = this;
+        const that = this;
 
         for (const secret of secrets) {
             const client_id = this.bots.length;
@@ -29,16 +29,17 @@ class Botpool {
             this.bots[client_id].guild_list = {};
 
             this.bots[client_id].leaveAllVoice = function() {
-                const client = that.bots[client_id];
+                const that.bots[client_id] = that.that.bots[client_id]s[client_id];
 
-                for (var guild of client.guilds.cache) {
+                for (var guild of that.bots[client_id].guilds.cache) {
                     /*guild[0] = guild_id
                       guild[1] = guild*/
                     guild = guild[1];
 
                     //Leave all voice channels on start
-                    if (!guild.members.cache.get(client.user.id).guild.voice) continue;
-                    const voice_channel = guild.members.cache.get(client.user.id).guild.voice.channel;
+                    if (!guild.members.cache.get(that.bots[client_id].user.id).guild.voice) continue;
+
+                    const voice_channel = guild.members.cache.get(that.bots[client_id].user.id).guild.voice.channel;
                     voice_channel.leave();
                     voice_channel.join();
                     voice_channel.leave();
@@ -54,7 +55,7 @@ class Botpool {
         	.filter((file) => file.endsWith('.js'));
 
         for (const file of commandFiles) {
-        	const command = require(path.join(dir, `${file}`));
+        	const command = require(path.join(dir, file));
             this.bots.forEach(bot => {
                 bot.commands.set(command.name, command);
             });
@@ -97,7 +98,7 @@ class Botpool {
                 let client = null;
 
                 //Get client matching client_id
-                for (const _client of that.list) {
+                for (const _client of that.bots) {
                     if (_client.user.id == client_id) {
                         client = _client;
                         break;  //break for loop when client is found

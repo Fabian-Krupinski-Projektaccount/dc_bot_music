@@ -1,15 +1,20 @@
-const db = require('quick.db');
-
-
-
 class Database {
     init(dev) {
+        this.db = require('quick.db');
         if (dev) db.delete('guilds');
 
         if (!db.get('guilds')) db.set('guilds', {});
     }
 
-    createGuild(guild_id) {
+    get(location) {
+        this.db.get(location);
+    }
+
+    set(location, value) {
+        this.db.set(location, value);
+    }
+
+    /*createGuild(guild_id) {
         if (db.get(`guilds.${guild_id}`)) return db.get(`guilds.${guild_id}`);
 
         return db.set(`guilds.${guild_id}`, {
@@ -46,7 +51,7 @@ class Database {
 
     getExecutedOfCommand(command) {
         return db.get(`guilds.${command.guild_id}.command_queue[${command.message_id}].executed`);
-    }
+    }*/
 }
 
 
