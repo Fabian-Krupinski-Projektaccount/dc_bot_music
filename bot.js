@@ -24,16 +24,16 @@ botpool.loadCommands(path.join(__dirname, 'commands'));
 /*
 ----------------------CLIENT EVENTS----------------------
 */
-botpool.bots.forEach(client => {
-    client.on('ready', async () => {
-        consola.ready(`Bot >>${client.user.tag}<<`);
+botpool.bots.forEach(bot => {
+    bot.on('ready', async () => {
+        consola.ready(`Bot >>${bot.user.tag}<<`);
 
-        client.leaveAllVoice();
+        bot.leaveAllVoice();
 
         setInterval(function() {
-            client.user.setPresence({
+            bot.user.setPresence({
                 activity: {
-                    name: `m!help on ${client.guilds.cache.size} server/s`, type: 'PLAYING'
+                    name: `m!help on ${bot.guilds.cache.size} server/s`, type: 'PLAYING'
                 },
                 status: 'online'
             })
@@ -42,28 +42,27 @@ botpool.bots.forEach(client => {
 
 
 
-    client.on('message', async message => {
+    bot.on('message', async message => {
         /*
         ----------------------VARIABLES----------------------
         */
         const guild_id = message.guild.id;
-        const message_id = message.id;
-        const client_id = client.user.id;
         const channel_id = message.channel.id;
+        const message_id = message.id;
 
 
         /*
         ----------------------CHECK IF MESSAGE IS VALID COMMAND----------------------
         */
     	if (message.author.bot) return;
-    	if (!message.content.startsWith(client.prefix)) return;
+    	if (!message.content.startsWith(bot.prefix)) return;
 
-    	const args = message.content.slice(client.prefix.length).trim().split(/ +/g);
+    	const args = message.content.slice(bot.prefix.length).trim().split(/ +/g);
     	const commandName = args.shift().toLowerCase();
 
         const command =
-    		client.commands.get(commandName) ||
-    		client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
+    		bot.commands.get(commandName) ||
+    		bot.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
 
 
     	if (!command) return;
@@ -72,14 +71,12 @@ botpool.bots.forEach(client => {
         /*
         ----------------------RUN----------------------
         */
-
-        var command_object = new Command({
+        botpool.execute(new Command({
             guild_id: guild_id,
             channel_id: channel_id,
             message_id: message_id,
-            args: args,
-            command_name: command.name
-        });
-        botpool.transferCommand(command_object, client_id);
+            command_name: command.name,
+            args: args
+        }), bot.user.id);
     });
 });

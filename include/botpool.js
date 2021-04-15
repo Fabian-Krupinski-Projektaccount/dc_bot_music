@@ -17,29 +17,29 @@ class Botpool {
         const that = this;
 
         for (const secret of secrets) {
-            const client_id = this.bots.length;
+            const bot_id = this.bots.length;
 
-            this.bots[client_id] = new Discord.Client()
+            this.bots[bot_id] = new Discord.Client()
 
-            this.bots[client_id].login(secret);
-            this.bots[client_id].commands = new Discord.Collection();
-            this.bots[client_id].prefix = this.prefix;
-            this.bots[client_id].name = this.name;
+            this.bots[bot_id].login(secret);
+            this.bots[bot_id].commands = new Discord.Collection();
+            this.bots[bot_id].prefix = this.prefix;
+            this.bots[bot_id].name = this.name;
 
-            this.bots[client_id].guild_list = {};
+            this.bots[bot_id].guild_list = {};
 
-            this.bots[client_id].leaveAllVoice = function() {
-                const that.bots[client_id] = that.that.bots[client_id]s[client_id];
+            this.bots[bot_id].leaveAllVoice = function() {
+                const bot = that.bots[bot_id];
 
-                for (var guild of that.bots[client_id].guilds.cache) {
+                for (var guild of bot.guilds.cache) {
                     /*guild[0] = guild_id
                       guild[1] = guild*/
                     guild = guild[1];
 
                     //Leave all voice channels on start
-                    if (!guild.members.cache.get(that.bots[client_id].user.id).guild.voice) continue;
+                    if (!guild.members.cache.get(bot.user.id).guild.voice) continue;
 
-                    const voice_channel = guild.members.cache.get(that.bots[client_id].user.id).guild.voice.channel;
+                    const voice_channel = guild.members.cache.get(bot.user.id).guild.voice.channel;
                     voice_channel.leave();
                     voice_channel.join();
                     voice_channel.leave();
@@ -63,7 +63,7 @@ class Botpool {
         }
     }
 
-    transferCommand(command, client_id) {
+    execute(command, client_id) {
         /* Structure of command object
          * this.guild_id = params.guild_id
          * this.channel_id = params.channel_id;
